@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scale Master</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+Great+Primer:ital@0;1&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <header>
+        <h1>Scale Master</h1>
+        
+    </header>
+    <main>
+        <div class="MenuContainer">
+            <section id="chord-input">
+                <select id="root-note">
+                    <option value="C">C</option>
+                    <option value="C#">C♯/D♭</option>
+                    <option value="D">D</option>
+                    <option value="D#">D♯/E♭</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="F#">F♯/G♭</option>
+                    <option value="G">G</option>
+                    <option value="G#">G♯/A♭</option>
+                    <option value="A">A</option>
+                    <option value="A#">A♯/B♭</option>
+                    <option value="B">B</option>
+                </select>
+                <select id="scale-category">
+                    <option value="major">Major</option>
+                    <option value="harmonic-minor">Harmonic Minor</option>
+                    <option value="melodic-minor">Melodic Minor</option>
+                    <option value="other">Other</option>
+                </select>
+                <select id="scale-mode">
+                    <!-- Options will be populated by JavaScript -->
+                </select>
+                <div>
+                    <button id="add-chord">+</button>
+                    <button id="random-chord">🎲</button>
+                </div>
+            </section>
+
+            <section id="chord-display">
+                <h2>Scale List</h2>
+                <ul id="chord-list"></ul>
+                <button id="clear-chords">Clear All</button>
+                <div class="tooltip-container">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">Drag the scales to reorder. Double-click to delete.</span>
+                </div>
+            </section>
+
+            <section id="voicing-section">
+                <label for="voicing-type">Type:</label>
+                <select id="voicing-type">
+                    <option value="4+0">4+0</option>
+                    <option value="3+1">3+1</option>
+                    <option value="2+2">2+2</option>
+                    <option value="1+3">1+3</option>
+                </select>
+                <button id="generate-voicing">Voicing</button>
+                <div class="tooltip-container">
+                    <span class="tooltip-icon">?</span>
+                    <span class="tooltip-text">Chord tones + scale notes create 4-way close voicing.</span>
+                </div>
+            </section>
+
+            <div class="container">
+                <div class="keyboard">
+                    <!-- White keys -->
+                    <div class="white-key" id="key0" data-note="C3"></div>
+                    <div class="white-key" id="key2" data-note="D3"></div>
+                    <div class="white-key" id="key4" data-note="E3"></div>
+                    <div class="white-key" id="key5" data-note="F3"></div>
+                    <div class="white-key" id="key7" data-note="G3"></div>
+                    <div class="white-key" id="key9" data-note="A3"></div>
+                    <div class="white-key" id="key11" data-note="B3"></div>
+                    <div class="white-key" id="key12" data-note="C4"></div>
+                    <div class="white-key" id="key14" data-note="D4"></div>
+                    <div class="white-key" id="key16" data-note="E4"></div>
+                    <div class="white-key" id="key17" data-note="F4"></div>
+                    <div class="white-key" id="key19" data-note="G4"></div>
+                    <div class="white-key" id="key21" data-note="A4"></div>
+                    <div class="white-key" id="key23" data-note="B4"></div>
+                    <div class="white-key" id="key24" data-note="C5"></div>
+
+                    <!-- Black keys -->
+                    <div class="black-key" id="key1" data-note="C#3"></div>
+                    <div class="black-key" id="key3" data-note="D#3"></div>
+                    <div class="black-key" id="key6" data-note="F#3"></div>
+                    <div class="black-key" id="key8" data-note="G#3"></div>
+                    <div class="black-key" id="key10" data-note="A#3"></div>
+                    <div class="black-key" id="key13" data-note="C#4"></div>
+                    <div class="black-key" id="key15" data-note="D#4"></div>
+                    <div class="black-key" id="key18" data-note="F#4"></div>
+                    <div class="black-key" id="key20" data-note="G#4"></div>
+                    <div class="black-key" id="key22" data-note="A#4"></div>
+                </div>
+
+                <div id="play-buttons">
+                    <button id="play-scale" class="play-button">🎶</button>
+                    <button id="play-chord" class="play-button">🎹</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script type="module" src="piano.js"></script>
+    <script type="module" src="main.js"></script>
+    <div id="midi-status">Midi device is supported</div>
+</body>
+</html>

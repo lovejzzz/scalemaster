@@ -1,0 +1,447 @@
+/* Body */
+html, body {
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background: linear-gradient(to bottom, #ffffff 0%, #f7f7f7 100%);
+}
+
+body {
+    font-family: "IM Fell Great Primer", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #333;
+    padding: 20px;   
+}
+
+header {
+    font-family: "IM Fell Great Primer", serif;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2em;
+    color: #444;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Container for Keyboard and Play Buttons */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Chord Input, Display, Play Buttons, and Voicing Section */
+#chord-input, #chord-display, #play-buttons, #voicing-section {
+    font-family: "IM Fell Great Primer", serif;
+    font-weight: 400;
+    font-style: normal;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(to bottom, #ffffff 0%, #eaeaea 100%);
+    border-radius: 8px;
+    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 
+                0 4px 6px rgba(0, 0, 0, 0.1);
+    border: 1px solid #ccc;
+    width: 100%;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+}
+
+/* Chord Input specific styles */
+#chord-input {
+    position: relative;
+    padding-bottom: 60px; /* Make space for the buttons */
+}
+
+/* 1. Adjust spacing between Add Chord and Random Chord buttons */
+#add-chord, #random-chord {
+    position: absolute;
+    bottom: 15px;
+    height: 40px;
+    width: 10%;
+
+}
+
+#add-chord {
+    right: 90px; /* Increased from 70px to add more space */
+}
+
+#random-chord {
+    right: 15px; /* Keeps the Random Chord button at the far right */
+}
+
+/* Specific Styles for Voicing Controls */
+#voicing-section {
+    display: flex;
+    justify-content: flex-start; /* Changed from space-between to flex-start */
+    align-items: center;
+    gap: 15px;
+    position: relative; /* Ensure the voicing section is a positioned container */
+}
+
+/* Voicing type text style */
+#voicing-section label {
+    font-family: "IM Fell Great Primer", serif;
+}
+
+/* Uniform styles for all select elements */
+select {
+    padding: 10px 30px 10px 10px; /* Increased right padding for arrow */
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background: #fff;
+    color: #333;
+    transition: background 0.3s;
+    height: 40px;
+    width: auto;
+    min-width: 120px;
+    max-width: 100%; /* Ensure it doesn't overflow its container */
+    box-sizing: border-box;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg fill="black" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 5px top 50%;
+    background-size: 20px auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Specific styles for root-note select */
+#root-note {
+    min-width: 80px; /* Shorter width for root selection */
+}
+
+/* Specific styles for scale-category and scale-mode */
+#scale-category, #scale-mode {
+    min-width: 150px; /* Increased minimum width */
+}
+
+select:focus {
+    background-color: #f0f0f0;
+    outline: none;
+    border-color: #999;
+}
+
+/* Button styles */
+button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
+    color: #333;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out, background 0.3s;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 40px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+button:hover {
+    background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Play Buttons Container */
+#play-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 10px;
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin-bottom: 0;
+    clear: both;
+    width: 100%;
+}
+
+/* Unordered List */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* List Items */
+li {
+    position: relative;
+    padding: 12px 15px;
+    background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    display: inline-block;
+    margin-bottom: 15px;
+    cursor: grab;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    white-space: nowrap;
+}
+
+li:hover, .selected-scale {
+    background: linear-gradient(to bottom, #f7f7f7 0%, #e6e6e6 100%);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Keyboard styles */
+.keyboard {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    height: auto;
+}
+
+.white-key {
+    width: 6.6667%;
+    aspect-ratio: 2 / 10;
+    background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
+    border: 1px solid #bbb;
+    float: left;
+    box-sizing: border-box;
+    position: relative;
+    transition: transform 0.1s ease-in-out;
+    box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.2);
+}
+
+.black-key {
+    width: 5%;
+    aspect-ratio: 1 / 4;
+    background: linear-gradient(to bottom, #333333 0%, #000000 100%);
+    position: absolute;
+    top: 0;
+    z-index: 1;
+    transition: transform 0.1s ease-in-out;
+    box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.2), 0 2px 3px rgba(0, 0, 0, 0.4);
+    border-radius: 2px;
+}
+
+/* Positions for black keys */
+#key1 { left: 5%; }
+#key3 { left: 11.6667%; }
+#key6 { left: 25%; }
+#key8 { left: 31.6667%; }
+#key10 { left: 38.3333%; }
+#key13 { left: 51.6667%; }
+#key15 { left: 58.3333%; }
+#key18 { left: 71.6667%; }
+#key20 { left: 78.3333%; }
+#key22 { left: 85%; }
+
+/* Highlighted keys */
+.highlighted.white-key {
+    background: #ffd700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+}
+
+.highlighted.black-key {
+    background: #ffa500;
+    box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
+}
+
+.red-key {
+    background-color: red !important;
+}
+
+.white-key, .black-key {
+    transition: transform 0.1s ease-in-out;
+}
+
+.white-key:active, .black-key:active {
+    transform: scale(0.97);
+}
+
+/* Tooltip Container */
+.tooltip-container {
+    
+    position: relative;
+    float: right;
+    margin-left: 20px;
+    
+}
+
+/* Tooltip Icon */
+.tooltip-icon {
+    background-color: #555;
+    color: white;
+    padding: 6px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* General Tooltip Text Styling */
+.tooltip-text {
+    visibility: hidden;
+    width: 180px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Show Tooltip on Hover */
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 2b. Position the tooltip container at the bottom right of the voicing section */
+#voicing-section .tooltip-container {
+    position: absolute;
+    bottom: 5px; /* Adjust as needed for spacing */
+    right: 5px;  /* Adjust as needed for spacing */
+    float: none; /* Override the existing float */
+    margin-left: 0; /* Remove left margin to prevent shifting */
+}
+
+/* 3. Chord Display Tooltip Adjustments */
+#chord-display {
+    position: relative; /* Ensure positioning context for tooltip */
+}
+
+#chord-display .tooltip-container {
+    position: absolute;
+    bottom: 5px; /* Adjust as needed for spacing */
+    right: 5px;  /* Adjust as needed for spacing */
+    float: none; /* Override the existing float */
+    margin-left: 0; /* Remove left margin to prevent shifting */
+}
+
+/* 2c. Adjust tooltip popup position for voicing section */
+#voicing-section .tooltip-text {
+    top: 50%;               /* Center vertically */
+    right: 100%;            /* Position to the left of the icon */
+    transform: translateY(-50%); /* Adjust for perfect vertical centering */
+    /* Remove previous positioning to avoid conflicts */
+    bottom: auto;
+    left: auto;
+}
+
+/* 4. Tooltip Arrow for Voicing Section */
+#voicing-section .tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;                /* Center vertically relative to tooltip */
+    left: 100%;              /* Position to the right of the tooltip */
+    margin-top: -5px;        /* Adjust to center the arrow */
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #555 transparent transparent; /* Arrow pointing right */
+}
+
+/* Tooltip Text Styling for Chord Display */
+#chord-display .tooltip-text {
+    top: 50%;               /* Center vertically */
+    right: 100%;            /* Position to the left of the icon */
+    transform: translateY(-50%); /* Adjust for perfect vertical centering */
+    /* Remove previous positioning to avoid conflicts */
+    bottom: auto;
+    left: auto;
+}
+
+/* Tooltip Arrow for Chord Display */
+#chord-display .tooltip-text::after {
+    content: '';
+    position: absolute;
+    top: 50%;                /* Center vertically relative to tooltip */
+    left: 100%;              /* Position to the right of the tooltip */
+    margin-top: -5px;        /* Adjust to center the arrow */
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent #555 transparent transparent; /* Arrow pointing right */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    #chord-input, #voicing-section, #chord-display {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    select, button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    #play-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .keyboard {
+        max-width: 100%;
+    }
+
+    /* Adjust tooltip positioning for smaller screens if necessary */
+    #voicing-section .tooltip-container, #chord-display .tooltip-container {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    /* Optional: Adjust tooltip text for smaller screens */
+    #voicing-section .tooltip-text, #chord-display .tooltip-text {
+        width: 150px; /* Reduce width for smaller screens */
+    }
+}
+
+/* New styles for the voicing section */
+#voicing-section {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15px;
+    position: relative; /* Ensure positioning context for tooltip */
+}
+
+#generate-voicing {
+    white-space: nowrap;
+}
+
+/* MIDI Status Styles */
+#midi-status {
+    font-size: 0.8em;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    margin: 0 auto 10px auto; /* Center horizontally with auto margins */
+    width: fit-content; /* Allow the element to size to its content */
+    display: block; /* Make it a block element */
+    text-align: center; /* Center the text */
+}
+
+#midi-status.connected {
+    background-color: #282828;
+    color: white;
+    margin: 0 auto 10px auto; /* Keep the same margin as non-connected state */
+    width: fit-content;
+    display: block;
+    text-align: center;
+}
