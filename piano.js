@@ -13,7 +13,9 @@ let masterGainNode = null;
 
 // Split notes into primary (visible on website) and secondary (extended range)
 const primaryNotes = ['C3', 'C4', 'C5', 'A3', 'A4'];
-const secondaryNotes = ['A0', 'A1', 'A2', 'A5', 'A6', 'A7', 'C1', 'C2', 'C6', 'C7', 'C8'];
+const secondaryNotes = [
+    'A0', 'A1', 'A2', 'A6', 'A7', 'C1', 'C2', 'C6', 'C7', 'C8'
+];
 const availableNotes = [...primaryNotes, ...secondaryNotes];
 
 // Frequency mapping for all 88 piano keys (A0 to C8)
@@ -38,7 +40,7 @@ const noteFrequencies = {
     'C8': 4186.01
 };
 
-// Initialize audio context on first user interaction
+// Initialize audio context on page load
 function initAudioContext() {
     if (!audioContext) {
         audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -70,7 +72,7 @@ async function loadSample(note, velocity) {
 
 // Load piano samples in two phases
 async function loadPianoSamples() {
-    const velocities = [4, 8, 12, 16];
+    const velocities = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
     
     // Phase 1: Load primary notes (C3 to C5)
     console.log('Loading primary piano samples...');
@@ -168,12 +170,12 @@ function playSampledNote(note, velocity = 127, isChord = false) {
 
 // Function to play note and add visual feedback
 function playNoteWithSynth(note, keyElement, velocity = 127, isChord = false) {
-    keyElement.classList.add('red-key');
+    keyElement.classList.add('red-key'); // Add red-key class
     playSampledNote(note, velocity, isChord);
 
     setTimeout(() => {
-        keyElement.classList.remove('red-key');
-    }, 300);
+        keyElement.classList.remove('red-key'); // Remove red-key class after a short duration
+    }, 200); // Duration can be adjusted as needed
 }
 
 // Initialize MIDI
@@ -257,8 +259,7 @@ function handleMIDIMessage(message) {
 // Initialize audio and MIDI when the page loads
 window.addEventListener('load', () => {
     initMIDI();
-    // Add click event listener to initialize audio context
-    document.addEventListener('click', initAudioContext, { once: true });
+    initAudioContext(); // Preload primary notes on page load
 });
 
 // Export functions needed by main.js
