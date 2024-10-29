@@ -66,7 +66,6 @@ header {
     bottom: 15px;
     height: 40px;
     width: 10%;
-
 }
 
 #add-chord {
@@ -270,11 +269,9 @@ li:hover, .selected-scale {
 
 /* Tooltip Container */
 .tooltip-container {
-    
     position: relative;
     float: right;
     margin-left: 20px;
-    
 }
 
 /* Tooltip Icon */
@@ -315,31 +312,30 @@ li:hover, .selected-scale {
 /* 2b. Position the tooltip container at the bottom right of the voicing section */
 #voicing-section .tooltip-container {
     position: absolute;
-    bottom: 5px; /* Adjust as needed for spacing */
-    right: 5px;  /* Adjust as needed for spacing */
-    float: none; /* Override the existing float */
-    margin-left: 0; /* Remove left margin to prevent shifting */
+    bottom: 5px;
+    right: 5px;
+    float: none;
+    margin-left: 0;
 }
 
 /* 3. Chord Display Tooltip Adjustments */
 #chord-display {
-    position: relative; /* Ensure positioning context for tooltip */
+    position: relative;
 }
 
 #chord-display .tooltip-container {
     position: absolute;
-    bottom: 5px; /* Adjust as needed for spacing */
-    right: 5px;  /* Adjust as needed for spacing */
-    float: none; /* Override the existing float */
-    margin-left: 0; /* Remove left margin to prevent shifting */
+    bottom: 5px;
+    right: 5px;
+    float: none;
+    margin-left: 0;
 }
 
 /* 2c. Adjust tooltip popup position for voicing section */
 #voicing-section .tooltip-text {
-    top: 50%;               /* Center vertically */
-    right: 100%;            /* Position to the left of the icon */
-    transform: translateY(-50%); /* Adjust for perfect vertical centering */
-    /* Remove previous positioning to avoid conflicts */
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
     bottom: auto;
     left: auto;
 }
@@ -348,20 +344,19 @@ li:hover, .selected-scale {
 #voicing-section .tooltip-text::after {
     content: '';
     position: absolute;
-    top: 50%;                /* Center vertically relative to tooltip */
-    left: 100%;              /* Position to the right of the tooltip */
-    margin-top: -5px;        /* Adjust to center the arrow */
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent #555 transparent transparent; /* Arrow pointing right */
+    border-color: transparent #555 transparent transparent;
 }
 
 /* Tooltip Text Styling for Chord Display */
 #chord-display .tooltip-text {
-    top: 50%;               /* Center vertically */
-    right: 100%;            /* Position to the left of the icon */
-    transform: translateY(-50%); /* Adjust for perfect vertical centering */
-    /* Remove previous positioning to avoid conflicts */
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
     bottom: auto;
     left: auto;
 }
@@ -370,12 +365,12 @@ li:hover, .selected-scale {
 #chord-display .tooltip-text::after {
     content: '';
     position: absolute;
-    top: 50%;                /* Center vertically relative to tooltip */
-    left: 100%;              /* Position to the right of the tooltip */
-    margin-top: -5px;        /* Adjust to center the arrow */
+    top: 50%;
+    left: 100%;
+    margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent #555 transparent transparent; /* Arrow pointing right */
+    border-color: transparent #555 transparent transparent;
 }
 
 /* Responsive Adjustments */
@@ -400,15 +395,13 @@ li:hover, .selected-scale {
         max-width: 100%;
     }
 
-    /* Adjust tooltip positioning for smaller screens if necessary */
     #voicing-section .tooltip-container, #chord-display .tooltip-container {
         bottom: 10px;
         right: 10px;
     }
 
-    /* Optional: Adjust tooltip text for smaller screens */
     #voicing-section .tooltip-text, #chord-display .tooltip-text {
-        width: 150px; /* Reduce width for smaller screens */
+        width: 150px;
     }
 }
 
@@ -418,7 +411,7 @@ li:hover, .selected-scale {
     justify-content: flex-start;
     align-items: center;
     gap: 15px;
-    position: relative; /* Ensure positioning context for tooltip */
+    position: relative;
 }
 
 #generate-voicing {
@@ -430,17 +423,16 @@ li:hover, .selected-scale {
     font-size: 0.8em;
     padding: 5px 10px;
     border-radius: 4px;
-    background-color: #f0f0f0;
-    margin: 0 auto 10px auto; /* Center horizontally with auto margins */
-    width: fit-content; /* Allow the element to size to its content */
-    display: block; /* Make it a block element */
-    text-align: center; /* Center the text */
+    margin: 0 auto 10px auto;
+    width: fit-content;
+    display: block;
+    text-align: center;
 }
 
 #midi-status.connected {
     background-color: #282828;
     color: white;
-    margin: 0 auto 10px auto; /* Keep the same margin as non-connected state */
+    margin: 0 auto 10px auto;
     width: fit-content;
     display: block;
     text-align: center;

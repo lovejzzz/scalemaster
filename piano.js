@@ -11,8 +11,10 @@ let midiInput = null;
 // Master gain node for overall volume control
 let masterGainNode = null;
 
-// Available notes in our sample set (expanded to include all available samples)
-const availableNotes = ['A0', 'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'];
+// Split notes into primary (visible on website) and secondary (extended range)
+const primaryNotes = ['C3', 'C4', 'C5', 'A3', 'A4'];
+const secondaryNotes = ['A0', 'A1', 'A2', 'A5', 'A6', 'A7', 'C1', 'C2', 'C6', 'C7', 'C8'];
+const availableNotes = [...primaryNotes, ...secondaryNotes];
 
 // Frequency mapping for all 88 piano keys (A0 to C8)
 const noteFrequencies = {
@@ -51,26 +53,46 @@ function initAudioContext() {
     }
 }
 
-// Load piano samples
-async function loadPianoSamples() {
-    const velocities = [4, 8, 12, 16]; // Different velocity layers
-    
-    console.log('Loading piano samples...');
-    
-    for (const note of availableNotes) {
-        for (const velocity of velocities) {
-            const url = `piano/${note}v${velocity}.wav`;
-            try {
-                const response = await fetch(url);
-                const arrayBuffer = await response.arrayBuffer();
-                const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                sampleBuffers.set(`${note}_v${velocity}`, audioBuffer);
-            } catch (error) {
-                console.warn(`Error loading sample ${url}:`, error);
-            }
-        }
+// Function to load a single piano sample
+async function loadSample(note, velocity) {
+    const url = `piano/${note}v${velocity}.wav`;
+    try {
+        const response = await fetch(url);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        sampleBuffers.set(`${note}_v${velocity}`, audioBuffer);
+        return true;
+    } catch (error) {
+        console.warn(`Error loading sample ${url}:`, error);
+        return false;
     }
-    console.log('Piano samples loaded');
+}
+
+// Load piano samples in two phases
+async function loadPianoSamples() {
+    const velocities = [4, 8, 12, 16];
+    
+    // Phase 1: Load primary notes (C3 to C5)
+    console.log('Loading primary piano samples...');
+    
+    const primaryLoads = primaryNotes.flatMap(note =>
+        velocities.map(velocity => loadSample(note, velocity))
+    );
+    await Promise.all(primaryLoads);
+    
+    console.log('Primary piano samples loaded');
+    
+    // Phase 2: Load secondary notes in the background
+    console.log('Loading secondary piano samples...');
+    
+    const secondaryLoads = secondaryNotes.flatMap(note =>
+        velocities.map(velocity => loadSample(note, velocity))
+    );
+    
+    // Load secondary notes
+    Promise.all(secondaryLoads).then(() => {
+        console.log('All piano samples loaded');
+    });
 }
 
 // Function to get the closest available sample note
@@ -170,7 +192,7 @@ async function initMIDI() {
             updateMIDIStatus(`Connected to ${midiInput.name}`);
         } else {
             console.log('No MIDI input devices available');
-            updateMIDIStatus('Midi device is supported');
+            updateMIDIStatus('MIDI device is supported');
         }
 
         // Listen for device connections/disconnections
