@@ -57,7 +57,7 @@ function initAudioContext() {
 
 // Function to load a single piano sample
 async function loadSample(note, velocity) {
-    const url = `piano/${note}v${velocity}.wav`;
+    const url = `piano/${note}v${velocity}.mp3`;
     try {
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();

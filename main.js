@@ -81,7 +81,7 @@ const scales = {
 // Add event listeners to each piano key
 const keys = document.querySelectorAll('.white-key, .black-key');
 keys.forEach(key => {
-    key.addEventListener('click', () => {
+    key.addEventListener('click', () => { // Reverted back to 'click'
         const note = key.getAttribute('data-note');
         playNoteWithSynth(note, key);
     });
