@@ -41,7 +41,7 @@ const scaleModes = {
         { value: 'Lydian Augmented (MM3)', name: 'Lydian Augmented (MM3)' },
         { value: 'Lydian Dominant (MM4)', name: 'Lydian Dominant (MM4)' },
         { value: 'Mixolydian Flat 6 (MM5)', name: 'Mixolydian Flat 6 (MM5)' },
-        { value: 'Locrian Nature 2 (MM6)', name: 'Locrian Nature 2 (MM6)' },
+        { value: 'Locrian Natural 2 (MM6)', name: 'Locrian Natural 2 (MM6)' },
         { value: 'Altered Scale (MM7)', name: 'Altered Scale (MM7)' }
     ],
     other: [
