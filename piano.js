@@ -144,12 +144,12 @@ function playSampledNote(note, velocity = 127, isChord = false) {
         
         // Scale gain based on velocity and whether it's part of a chord
         const normalizedVelocity = velocity / 127;
-        const baseGain = isChord ? 0.7 : 0.8; // Further reduced volume for chord notes to 35%
+        const baseGain = isChord ? 0.6 : 0.7; // Further reduced volume for chord notes to 35%
         gainNode.gain.value = normalizedVelocity * baseGain;
 
         // Add sustain control with shorter times for chords
-        const sustainTime = isChord ? 0.35 : 0.35; // Shorter sustain for chords
-        const releaseTime = isChord ? 0.42 : 0.42; // Shorter release for chords
+        const sustainTime = isChord ? 0.4 : 0.4; // Shorter sustain for chords
+        const releaseTime = isChord ? 0.8 : 0.8; // Shorter release for chords
         
         const now = audioContext.currentTime;
         gainNode.gain.setValueAtTime(gainNode.gain.value, now);

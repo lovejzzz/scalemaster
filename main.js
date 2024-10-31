@@ -112,7 +112,7 @@ const slotMachineAudio = new Audio('asset/slot-machine.mp3');
 const addChordAudio = new Audio('asset/add.mp3');
 const clearAudio = new Audio('asset/clear.mp3');
 
-slotMachineAudio.volume = 0.5;
+slotMachineAudio.volume = 0.6;
 
 function playSlotMachineSound() {
     slotMachineAudio.play();
