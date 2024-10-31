@@ -66,6 +66,7 @@ header {
     bottom: 15px;
     height: 40px;
     width: 10%;
+    transition: transform 0.2s ease, background 0.3s;
 }
 
 #add-chord {
@@ -141,7 +142,7 @@ button {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    transition: transform 0.1s ease-in-out, background 0.3s;
+    transition: transform 0.2s ease, background 0.3s;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     height: 40px;
     box-sizing: border-box;
@@ -153,6 +154,7 @@ button {
 
 button:hover {
     background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
+    transform: scale(1.1);
 }
 
 button:active {
@@ -177,6 +179,9 @@ button:active {
 ul {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 /* List Items */
@@ -187,16 +192,24 @@ li {
     border: 1px solid #ccc;
     border-radius: 8px;
     display: inline-block;
-    margin-bottom: 15px;
     cursor: grab;
-    transition: background 0.3s ease, box-shadow 0.3s ease;
+    transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     white-space: nowrap;
+    margin: 5px;
 }
 
-li:hover, .selected-scale {
-    background: linear-gradient(to bottom, #f7f7f7 0%, #e6e6e6 100%);
+li:hover {
+    background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.1);
+    z-index: 1;
+}
+
+.selected-scale {
+    background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: scale(1.05);
 }
 
 /* Keyboard styles */
@@ -323,6 +336,11 @@ li:hover, .selected-scale {
     position: relative;
 }
 
+#chord-display h2 {
+    display: inline-block;
+    margin-right: 10px;
+}
+
 #chord-display .tooltip-container {
     position: absolute;
     bottom: 5px;
@@ -371,6 +389,33 @@ li:hover, .selected-scale {
     border-width: 5px;
     border-style: solid;
     border-color: transparent #555 transparent transparent;
+}
+
+/* Trash Can Icon */
+.trash-can {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.3s;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    vertical-align: middle;
+    margin-left: 10px;
+}
+
+.trash-can:hover {
+    transform: scale(1.1);
+    background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
+}
+
+.trash-can.drag-over {
+    transform: scale(1.2);
+    background: #ffdd57;
 }
 
 /* Responsive Adjustments */
@@ -441,7 +486,7 @@ li:hover, .selected-scale {
 /* Keyframe animation for rolling out keys */
 @keyframes rollOut {
     from {
-        transform: translateX(-100%);
+        transform: translateX(-300%);
         opacity: 0;
     }
     to {
@@ -451,8 +496,15 @@ li:hover, .selected-scale {
 }
 
 /* Apply the animation to white and black keys */
-.white-key, .black-key {
+.white-key{
     animation: rollOut 1s ease-out forwards;
+    animation-timing-function: ease-in-out;
+    opacity: 0; /* Start with keys hidden */
+}
+
+.black-key {
+    animation: rollOut 1s ease-out forwards;
+    animation-timing-function: ease-in-out;
     opacity: 0; /* Start with keys hidden */
 }
 

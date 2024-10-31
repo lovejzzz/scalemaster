@@ -81,7 +81,7 @@ const scales = {
 // Add event listeners to each piano key
 const keys = document.querySelectorAll('.white-key, .black-key');
 keys.forEach(key => {
-    key.addEventListener('click', () => { // Reverted back to 'click'
+    key.addEventListener('click', () => {
         const note = key.getAttribute('data-note');
         playNoteWithSynth(note, key);
     });
@@ -167,13 +167,26 @@ document.getElementById('random-chord').addEventListener('click', () => {
         
         const rootNote = rootNoteMenu.value;
         const scaleMode = scaleModeMenu.value;
-        chordList.push({ rootNote, scaleMode });
+        const newChord = { rootNote, scaleMode };
+        chordList.push(newChord);
         updateChordDisplay();
+        selectChord(newChord, chordList.length - 1);
     }
 
     startRolling();
     setTimeout(stopRolling, 1400);
 });
+
+// Function to select a chord
+function selectChord(chord, index) {
+    const allItems = document.querySelectorAll('#chord-list li');
+    allItems.forEach(item => item.classList.remove('selected-scale'));
+    if (allItems[index]) {
+        allItems[index].classList.add('selected-scale');
+    }
+    selectedScale = chord;
+    updateKeyboard(chord.rootNote, chord.scaleMode);
+}
 
 // Function to update the display of selected chords
 function updateChordDisplay() {
@@ -182,20 +195,22 @@ function updateChordDisplay() {
     chordList.forEach((chord, index) => {
         const listItem = document.createElement('li');
         listItem.textContent = `${chord.rootNote} ${chord.scaleMode}`;
-
         listItem.setAttribute('draggable', true);
 
         listItem.addEventListener('dblclick', () => {
             chordList.splice(index, 1);
             updateChordDisplay();
+            if (chordList.length > 0) {
+                const newIndex = Math.min(index, chordList.length - 1);
+                selectChord(chordList[newIndex], newIndex);
+            } else {
+                selectedScale = null;
+                clearHighlightedKeys();
+            }
         });
 
         listItem.addEventListener('click', () => {
-            const allItems = document.querySelectorAll('#chord-list li');
-            allItems.forEach(item => item.classList.remove('selected-scale'));
-            listItem.classList.add('selected-scale');
-            selectedScale = chord;
-            updateKeyboard(chord.rootNote, chord.scaleMode);
+            selectChord(chord, index);
         });
 
         listItem.addEventListener('dragstart', (e) => {
@@ -211,7 +226,13 @@ function updateChordDisplay() {
             e.preventDefault();
             const draggingItem = document.querySelector('.dragging');
             if (draggingItem !== listItem) {
-                chordDisplay.insertBefore(draggingItem, listItem);
+                const rect = listItem.getBoundingClientRect();
+                const y = e.clientY - rect.top;
+                if (y < rect.height / 2) {
+                    chordDisplay.insertBefore(draggingItem, listItem);
+                } else {
+                    chordDisplay.insertBefore(draggingItem, listItem.nextSibling);
+                }
             }
         });
 
@@ -224,21 +245,54 @@ document.getElementById('add-chord').addEventListener('click', () => {
     playAddChordSound();
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
-    chordList.push({ rootNote, scaleMode });
+    const newChord = { rootNote, scaleMode };
+    chordList.push(newChord);
     updateChordDisplay();
+    selectChord(newChord, chordList.length - 1);
 });
 
-// Clear chords button event listener
-document.getElementById('clear-chords').addEventListener('click', () => {
+// Trash can functionality
+const trashCan = document.getElementById('trash-can');
+
+trashCan.addEventListener('click', () => {
     playClearSound();
     chordList.length = 0;
     updateChordDisplay();
+    clearHighlightedKeys();
+    selectedScale = null;
+});
 
+trashCan.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    trashCan.classList.add('drag-over');
+});
+
+trashCan.addEventListener('dragleave', () => {
+    trashCan.classList.remove('drag-over');
+});
+
+trashCan.addEventListener('drop', (e) => {
+    e.preventDefault();
+    trashCan.classList.remove('drag-over');
+    const index = e.dataTransfer.getData('text/plain');
+    chordList.splice(index, 1);
+    updateChordDisplay();
+    playClearSound();
+    if (chordList.length > 0) {
+        const newIndex = Math.min(index, chordList.length - 1);
+        selectChord(chordList[newIndex], newIndex);
+    } else {
+        selectedScale = null;
+        clearHighlightedKeys();
+    }
+});
+
+function clearHighlightedKeys() {
     const highlightedKeys = document.querySelectorAll('.highlighted');
     highlightedKeys.forEach(key => {
         key.classList.remove('highlighted');
     });
-});
+}
 
 // Function to get the scale indices for a given tonic and scale type
 function getScaleIndices(tonic, scaleType) {
@@ -408,7 +462,7 @@ function playFourNoteChord() {
     const highlightedKeys = document.querySelectorAll('.highlighted');
     highlightedKeys.forEach(key => {
         const note = key.getAttribute('data-note');
-        playNoteWithSynth(note, key, 127, true); // Set isChord to true
+        playNoteWithSynth(note, key, 127, true);
     });
 }
 
@@ -464,12 +518,12 @@ document.getElementById('scale-mode').addEventListener('change', adjustVoicingTy
 (function addTooltips() {
     const addChordButton = document.getElementById('add-chord');
     const randomChordButton = document.getElementById('random-chord');
-    const clearChordsButton = document.getElementById('clear-chords');
+    const trashCan = document.getElementById('trash-can');
     const generateVoicingButton = document.getElementById('generate-voicing');
 
     if (addChordButton) addChordButton.title = 'Press Enter to add chord';
     if (randomChordButton) randomChordButton.title = 'Press R for random chord';
-    if (clearChordsButton) clearChordsButton.title = 'Press Delete to clear all chords';
+    if (trashCan) trashCan.title = 'Press Delete to clear all scales';
     if (generateVoicingButton) generateVoicingButton.title = 'Press 1-4 to select and execute voicing type';
 })();
 
@@ -510,10 +564,10 @@ document.addEventListener('keydown', function(event) {
         }
     }
     else if (key === 'Delete' || code === 'Delete' || keyCode === 46 || key === 'Backspace' || keyCode === 8) {
-        const clearChordsButton = document.getElementById('clear-chords');
-        if (clearChordsButton) {
+        const trashCan = document.getElementById('trash-can');
+        if (trashCan) {
             event.preventDefault();
-            clearChordsButton.click();
+            trashCan.click();
         }
     }
     else if (key === '1') {
