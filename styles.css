@@ -304,16 +304,18 @@ li:hover {
 /* General Tooltip Text Styling */
 .tooltip-text {
     visibility: hidden;
-    width: 180px;
+    width: min(180px, 30vw); /* Responsive width that's max 180px */
     background-color: #555;
     color: #fff;
     text-align: center;
     border-radius: 5px;
-    padding: 5px 0;
+    padding: 5px;
     position: absolute;
     z-index: 1;
     opacity: 0;
     transition: opacity 0.3s;
+    font-size: 0.9em;
+    line-height: 1.4;
 }
 
 /* Show Tooltip on Hover */
@@ -356,6 +358,7 @@ li:hover {
     transform: translateY(-50%);
     bottom: auto;
     left: auto;
+    margin-right: 10px;
 }
 
 /* 4. Tooltip Arrow for Voicing Section */
@@ -367,7 +370,7 @@ li:hover {
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent #555 transparent transparent;
+    border-color: transparent transparent transparent #555;
 }
 
 /* Tooltip Text Styling for Chord Display */
@@ -377,6 +380,7 @@ li:hover {
     transform: translateY(-50%);
     bottom: auto;
     left: auto;
+    margin-right: 10px;
 }
 
 /* Tooltip Arrow for Chord Display */
@@ -388,7 +392,7 @@ li:hover {
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent #555 transparent transparent;
+    border-color: transparent transparent transparent #555;
 }
 
 /* Responsive Adjustments */
@@ -418,8 +422,8 @@ li:hover {
         right: 10px;
     }
 
-    #voicing-section .tooltip-text, #chord-display .tooltip-text {
-        width: 150px;
+    .tooltip-text {
+        width: min(180px, 60vw); /* Wider on mobile but still responsive */
     }
 }
 
