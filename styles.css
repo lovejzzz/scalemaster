@@ -391,33 +391,6 @@ li:hover {
     border-color: transparent #555 transparent transparent;
 }
 
-/* Trash Can Icon */
-.trash-can {
-    position: relative;
-    display: inline-block;
-    font-size: 18px;
-    cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 8px;
-    vertical-align: middle;
-    margin-left: 10px;
-}
-
-.trash-can:hover {
-    transform: scale(1.1);
-    background: linear-gradient(to bottom, #ffc107 0%, #ffdd57 100%);
-}
-
-.trash-can.drag-over {
-    transform: scale(1.2);
-    background: #ffdd57;
-}
-
 /* Responsive Adjustments */
 @media (max-width: 600px) {
     #chord-input, #voicing-section, #chord-display {
