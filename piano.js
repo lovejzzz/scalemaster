@@ -260,6 +260,50 @@ function handleMIDIMessage(message) {
 window.addEventListener('load', () => {
     initMIDI();
     initAudioContext(); // Preload primary notes on page load
+
+    // Add hover tooltips for play buttons
+    const playScaleButton = document.getElementById('play-scale');
+    const playChordButton = document.getElementById('play-chord');
+
+    playScaleButton.addEventListener('mouseenter', () => {
+        const tooltip = document.createElement('span');
+        tooltip.className = 'tooltip-text';
+        tooltip.textContent = 'Arpeggio';
+        playScaleButton.appendChild(tooltip);
+    });
+
+    playScaleButton.addEventListener('mouseleave', () => {
+        const tooltip = playScaleButton.querySelector('.tooltip-text');
+        if (tooltip) {
+            playScaleButton.removeChild(tooltip);
+        }
+    });
+
+    playChordButton.addEventListener('mouseenter', () => {
+        const tooltip = document.createElement('span');
+        tooltip.className = 'tooltip-text';
+        tooltip.textContent = 'Chords';
+        playChordButton.appendChild(tooltip);
+    });
+
+    playChordButton.addEventListener('mouseleave', () => {
+        const tooltip = playChordButton.querySelector('.tooltip-text');
+        if (tooltip) {
+            playChordButton.removeChild(tooltip);
+        }
+    });
+
+    // Add event listeners for voicing buttons
+    const voicingButtons = document.querySelectorAll('.voicing-button');
+    voicingButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const voicingType = button.getAttribute('data-voicing');
+            const selectedScale = document.getElementById('scale-mode').value;
+            const rootNote = document.getElementById('root-note').value;
+            const voicing = generateFourWayClose(rootNote, selectedScale, voicingType);
+            updateKeyboardForVoicing(voicing);
+        });
+    });
 });
 
 // Export functions needed by main.js

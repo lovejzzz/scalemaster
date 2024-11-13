@@ -520,11 +520,15 @@ document.getElementById('scale-mode').addEventListener('change', adjustVoicingTy
     const randomChordButton = document.getElementById('random-chord');
     const trashCan = document.getElementById('trash-can');
     const generateVoicingButton = document.getElementById('generate-voicing');
+    const playScaleButton = document.getElementById('play-scale');
+    const playChordButton = document.getElementById('play-chord');
 
     if (addChordButton) addChordButton.title = 'Press Enter to add chord';
     if (randomChordButton) randomChordButton.title = 'Press R for random chord';
     if (trashCan) trashCan.title = 'Press Delete to clear all scales';
     if (generateVoicingButton) generateVoicingButton.title = 'Press 1-4 to select and execute voicing type';
+    if (playScaleButton) playScaleButton.title = 'Arpeggio';
+    if (playChordButton) playChordButton.title = 'Chords';
 })();
 
 // Function to set voicing type and execute
@@ -587,3 +591,4 @@ document.addEventListener('keydown', function(event) {
         setVoicingAndExecute('1+3');
     }
 });
+
