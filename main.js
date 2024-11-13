@@ -527,8 +527,8 @@ document.getElementById('scale-mode').addEventListener('change', adjustVoicingTy
     if (randomChordButton) randomChordButton.title = 'Press R for random chord';
     if (trashCan) trashCan.title = 'Press Delete to clear all scales';
     if (generateVoicingButton) generateVoicingButton.title = 'Press 1-4 to select and execute voicing type';
-    if (playScaleButton) playScaleButton.title = 'Arpeggio';
-    if (playChordButton) playChordButton.title = 'Chords';
+    if (playScaleButton) playScaleButton.title = 'Play Arpeggio';
+    if (playChordButton) playChordButton.title = 'Play Chord';
 })();
 
 // Function to set voicing type and execute
