@@ -290,16 +290,12 @@ li:hover {
 
 /* Tooltip Icon */
 .tooltip-icon {
-    background-color: transparent; /* Changed to transparent */
-    color: white;
-    padding: 0; /* Removed padding */
-    border: none; /* Removed border */
+    background-image: url('asset/tooltip.gif'); /* Set the tooltip icon to the gif */
+    background-size: 20px 20px; /* Set size for the icon */
+    background-repeat: no-repeat; /* Prevent repeating */
+    width: 20px; /* Set width for the icon */
+    height: 20px; /* Set height for the icon */
     cursor: pointer;
-    font-size: 14px;
-    line-height: 1;
-    display: inline-block;
-    vertical-align: middle;
-    box-shadow: none; /* Removed shadow */
 }
 
 /* General Tooltip Text Styling */
