@@ -257,7 +257,7 @@ li:hover {
 #key20 { left: 78.3333%; }
 #key22 { left: 85%; }
 
-/* Highlighted keys */
+ /* Highlighted keys */
 .highlighted.white-key {
     background: #ffd700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
@@ -289,16 +289,16 @@ li:hover {
 
 /* Tooltip Icon */
 .tooltip-icon {
-    background-color: #555;
+    background-color: transparent; /* Changed to transparent */
     color: white;
-    padding: 6px;
-    border-radius: 50%;
+    padding: 0; /* Removed padding */
+    border: none; /* Removed border */
     cursor: pointer;
     font-size: 14px;
     line-height: 1;
     display: inline-block;
     vertical-align: middle;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: none; /* Removed shadow */
 }
 
 /* General Tooltip Text Styling */
