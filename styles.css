@@ -28,6 +28,12 @@ header {
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
+/* Center the title GIF */
+header img {
+    display: block; /* Make the image a block element */
+    margin: 0 auto; /* Center the image */
+}
+
 /* Container for Keyboard and Play Buttons */
 .container {
     display: flex;
