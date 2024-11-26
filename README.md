@@ -35,3 +35,5 @@ A jazz scale look-up website.
 1.75 version: Fix bugs. Now the selection made in drop down menu will real-time update the piano keyboard.
 
 1.76 version: Fix the file paths of the title animation.
+
+1.77 version: Test gif loading.
