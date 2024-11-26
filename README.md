@@ -17,3 +17,5 @@ A jazz scale look-up website.
 1.66 version: Change the Voicing button to Re-Voicing when it has more options in voicing.
 
 1.67 version: Tooltip size optimized. Animation of reflection optimized.
+
+1.68 version: Animation for all buttons.

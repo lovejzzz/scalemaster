@@ -145,6 +145,7 @@ function updateScaleModes() {
 }
 
 // Audio setup for UI sounds
+const coinInsertAudio = new Audio('asset/CoinInsert.wav');
 const slotMachineAudio = new Audio('asset/slot-machine.mp3');
 const addChordAudio = new Audio('asset/add.wav');
 const clearAudio = new Audio('asset/clear.mp3');
@@ -152,6 +153,7 @@ const selectScaleAudio = new Audio('asset/ClickScaleInTheList.mp3');
 const pleaseSelectScaleAudio = new Audio('asset/PleaseSelectAScaleFromTheListFirst.wav');
 const voicingAudio = new Audio('asset/voicing.wav');
 
+coinInsertAudio.volume = 0.7;
 slotMachineAudio.volume = 0.7;
 selectScaleAudio.volume = 0.7;
 pleaseSelectScaleAudio.volume = 0.7;
@@ -246,6 +248,8 @@ function selectChord(chord, index) {
 // Function to update the display of selected chords
 function updateChordDisplay() {
     const chordDisplay = document.getElementById('scale-list');
+    const trashCan = document.getElementById('trash-can');
+
     // Clear existing content
     chordDisplay.innerHTML = '';
     
@@ -285,6 +289,7 @@ function updateChordDisplay() {
 
         listItem.addEventListener('dragend', () => {
             listItem.classList.remove('dragging');
+            trashCan.classList.remove('drag-hover');
         });
 
         listItem.addEventListener('dragover', (e) => {
@@ -302,19 +307,35 @@ function updateChordDisplay() {
         });
 
         chordDisplay.appendChild(listItem);
+    });
 
-        // Add reflection animation to the newest chord
-        if (index === chordList.length - 1) {
-            // Force a reflow to get accurate width
-            listItem.offsetHeight;
-            const width = listItem.offsetWidth;
-            reflectionOverlay.style.setProperty('--start-x', `-${width}px`);
-            reflectionOverlay.style.setProperty('--end-x', `${width * 1.5}px`);
-            reflectionOverlay.classList.add('reflection-animation');
-            setTimeout(() => {
-                reflectionOverlay.remove();
-            }, 1500);
+    // Add drag and drop functionality to trash can
+    trashCan.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        trashCan.classList.add('drag-hover');
+    });
+
+    trashCan.addEventListener('dragleave', () => {
+        trashCan.classList.remove('drag-hover');
+    });
+
+    trashCan.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const index = e.dataTransfer.getData('text/plain');
+        if (index !== '') {
+            playClearSound();
+            chordList.splice(parseInt(index), 1);
+            updateChordDisplay();
+            if (chordList.length > 0) {
+                const newIndex = Math.min(parseInt(index), chordList.length - 1);
+                selectChord(chordList[newIndex], newIndex);
+            } else {
+                selectedScale = null;
+                clearHighlightedKeys();
+                updateVoicingTypeMenuState();
+            }
         }
+        trashCan.classList.remove('drag-hover');
     });
 }
 
@@ -797,4 +818,10 @@ document.addEventListener('keydown', function(event) {
 // Initialize voicing type menu state
 document.addEventListener('DOMContentLoaded', () => {
     updateVoicingTypeMenuState();
+});
+
+// Add event listener for title image click
+document.querySelector('header img').addEventListener('click', () => {
+    coinInsertAudio.currentTime = 0;
+    coinInsertAudio.play();
 });
