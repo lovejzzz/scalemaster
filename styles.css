@@ -112,6 +112,12 @@ header img {
     font-family: "IM Fell Great Primer", serif;
 }
 
+/* Voicing button styles */
+#generate-voicing {
+    position: relative;
+    overflow: hidden;
+}
+
 /* Uniform styles for all select elements */
 select {
     padding: 10px 30px 10px 10px; /* Increased right padding for arrow */
@@ -480,6 +486,20 @@ li:hover {
     border-color: transparent transparent transparent #555;
 }
 
+/* Scale List Animation */
+@keyframes scaleListAnimation {
+    0% {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+    100% {
+        background-color: transparent;
+    }
+}
+
+.scale-list-animation {
+    animation: scaleListAnimation 1s ease-out forwards;
+}
+
 /* Keyframe animation for rolling out keys */
 @keyframes rollOut {
     from {
@@ -531,37 +551,6 @@ li:hover {
 #key22 { animation-delay: 2.2s; }
 #key23 { animation-delay: 2.3s; }
 #key24 { animation-delay: 2.4s; }
-
-/* Metallic Reflection Animation */
-@keyframes metallic-reflection {
-    0% {
-        transform: translateX(var(--start-x, -100px)) skewX(-45deg);
-    }
-    100% {
-        transform: translateX(var(--end-x, 100px)) skewX(-45deg);
-    }
-}
-
-.reflection-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 30px;
-    height: 100%;
-    pointer-events: none;
-    background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.8) 50%,
-        rgba(255,255,255,0) 100%
-    );
-    opacity: 0;
-}
-
-.reflection-animation {
-    opacity: 1;
-    animation: metallic-reflection 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-}
 
 /* Responsive Adjustments */
 @media screen and (max-width: 600px) {
@@ -938,4 +927,35 @@ li:hover {
         opacity: 1;
         transform: translate(-50%, -50%);
     }
+}
+
+/* Metallic Reflection Animation */
+@keyframes metallic-reflection {
+    0% {
+        transform: translateX(var(--start-x, -100px)) skewX(-45deg);
+    }
+    100% {
+        transform: translateX(var(--end-x, 100px)) skewX(-45deg);
+    }
+}
+
+.reflection-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 100%;
+    pointer-events: none;
+    background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.8) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    opacity: 0;
+}
+
+.reflection-overlay.reflection-animation {
+    opacity: 1;
+    animation: metallic-reflection 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }

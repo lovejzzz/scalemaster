@@ -228,18 +228,23 @@ document.getElementById('random-chord').addEventListener('click', () => {
 
 // Function to select a chord
 function selectChord(chord, index) {
-    const allItems = document.querySelectorAll('#chord-list li');
+    const allItems = document.querySelectorAll('#scale-list li');
     allItems.forEach(item => item.classList.remove('selected-scale'));
     if (allItems[index]) {
         allItems[index].classList.add('selected-scale');
     }
     selectedScale = chord;
     updateKeyboard(chord.rootNote, chord.scaleMode);
+    updateVoicingTypeMenuState();
+    // Reset voicing button text when new scale is selected
+    const generateVoicingButton = document.getElementById('generate-voicing');
+    generateVoicingButton.textContent = 'Voicing';
+    lastVoicing = null;  // Reset last voicing state
 }
 
 // Function to update the display of selected chords
 function updateChordDisplay() {
-    const chordDisplay = document.getElementById('chord-list');
+    const chordDisplay = document.getElementById('scale-list');
     // Clear existing content
     chordDisplay.innerHTML = '';
     
@@ -262,6 +267,7 @@ function updateChordDisplay() {
             } else {
                 selectedScale = null;
                 clearHighlightedKeys();
+                updateVoicingTypeMenuState();
             }
         });
 
@@ -331,6 +337,7 @@ trashCan.addEventListener('click', () => {
     updateChordDisplay();
     clearHighlightedKeys();
     selectedScale = null;
+    updateVoicingTypeMenuState();
 });
 
 trashCan.addEventListener('dragover', (e) => {
@@ -355,6 +362,7 @@ trashCan.addEventListener('drop', (e) => {
     } else {
         selectedScale = null;
         clearHighlightedKeys();
+        updateVoicingTypeMenuState();
     }
 });
 
@@ -497,6 +505,66 @@ function showCustomAlert(message) {
     closeButton.addEventListener('click', closeAlert);
 }
 
+// Function to update voicing button text and add animation
+function updateVoicingButton(voicingType, forceUpdate = false) {
+    const generateVoicingButton = document.getElementById('generate-voicing');
+    if (generateVoicingButton) {
+        const currentText = generateVoicingButton.textContent;
+        const newText = voicingType === '4+0' ? 'Voicing' : 'Re-Voicing';
+        
+        // Only update if text is different or force update is true
+        if (currentText !== newText || forceUpdate) {
+            generateVoicingButton.textContent = newText;
+            
+            // Only add animation if it's not 4+0 type
+            if (voicingType !== '4+0') {
+                addReflectionAnimation(generateVoicingButton);
+            }
+        }
+    }
+}
+
+// Function to add reflection animation to an element
+function addReflectionAnimation(element) {
+    // Remove any existing overlays
+    const existingOverlay = element.querySelector('.reflection-overlay');
+    if (existingOverlay) {
+        existingOverlay.remove();
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'reflection-overlay active'; // Add active class immediately
+    
+    // Calculate animation distances based on element width
+    const elementWidth = element.offsetWidth;
+    const startX = -elementWidth * 0.5;  // Start from 50% left of the element
+    const endX = elementWidth * 1.5;     // End at 150% of the element width
+    
+    // Set the CSS variables
+    overlay.style.setProperty('--start-x', `${startX}px`);
+    overlay.style.setProperty('--end-x', `${endX}px`);
+    
+    // Add the overlay to the element
+    element.appendChild(overlay);
+
+    // Clean up after animation
+    setTimeout(() => {
+        if (overlay && overlay.parentElement) {
+            overlay.remove();
+        }
+    }, 800); // Match animation duration
+}
+
+// Add event listener for voicing type to auto-generate voicing
+document.getElementById('voicing-type').addEventListener('change', () => {
+    const voicingType = document.getElementById('voicing-type').value;
+    const generateVoicingButton = document.getElementById('generate-voicing');
+    if (generateVoicingButton) {
+        updateVoicingButton(voicingType);
+        generateVoicingButton.click();
+    }
+});
+
 // Generate voicing button event listener
 document.getElementById('generate-voicing').addEventListener('click', () => {
     if (selectedScale) {
@@ -508,6 +576,7 @@ document.getElementById('generate-voicing').addEventListener('click', () => {
         voicingAudio.currentTime = 0;
         voicingAudio.play();
         updateKeyboardForVoicing(voicing);
+        updateVoicingButton(voicingType, true); // Force update on click
     } else {
         pleaseSelectScaleAudio.currentTime = 0;
         pleaseSelectScaleAudio.play();
@@ -592,18 +661,31 @@ function adjustVoicingTypes() {
     }
 }
 
+// Function to update voicing type menu state
+function updateVoicingTypeMenuState() {
+    const voicingTypeSelect = document.getElementById('voicing-type');
+    if (selectedScale === null) {
+        voicingTypeSelect.disabled = true;
+        voicingTypeSelect.style.opacity = '0.5';
+    } else {
+        voicingTypeSelect.disabled = false;
+        voicingTypeSelect.style.opacity = '1';
+    }
+}
+
 // Add event listeners for real-time scale updates
 document.getElementById('root-note').addEventListener('change', () => {
+    selectScaleAudio.currentTime = 0;
+    selectScaleAudio.play();
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
     updateKeyboard(rootNote, scaleMode);
 });
 
 document.getElementById('scale-category').addEventListener('change', () => {
+    selectScaleAudio.currentTime = 0;
+    selectScaleAudio.play();
     updateScaleModes();
-    const rootNote = document.getElementById('root-note').value;
-    const scaleMode = document.getElementById('scale-mode').value;
-    updateKeyboard(rootNote, scaleMode);
 });
 
 document.getElementById('scale-mode').addEventListener('change', () => {
@@ -613,6 +695,13 @@ document.getElementById('scale-mode').addEventListener('change', () => {
     const scaleMode = document.getElementById('scale-mode').value;
     selectedScale = { rootNote, scaleMode };
     updateKeyboard(rootNote, scaleMode);
+});
+
+document.getElementById('voicing-type').addEventListener('change', () => {
+    const generateVoicingButton = document.getElementById('generate-voicing');
+    if (generateVoicingButton) {
+        generateVoicingButton.click();
+    }
 });
 
 // Initialize the keyboard
@@ -702,4 +791,9 @@ document.addEventListener('keydown', function(event) {
         event.preventDefault();
         setVoicingAndExecute('1+3');
     }
+});
+
+// Initialize voicing type menu state
+document.addEventListener('DOMContentLoaded', () => {
+    updateVoicingTypeMenuState();
 });

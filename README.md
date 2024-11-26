@@ -13,3 +13,5 @@ A jazz scale look-up website.
 1.6 version: More sound effects are added. Animation for the new added scale.
 
 1.65 version: Layout optimization. Added phone support. Piano click to play notes optimized with no delay. Aleart for invalid inputs has new window and sound effect.
+
+1.66 version: Change the Voicing button to Re-Voicing when it has more options in voicing.
