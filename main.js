@@ -155,7 +155,8 @@ const voicingAudio = new Audio('asset/voicing.wav');
 slotMachineAudio.volume = 0.7;
 selectScaleAudio.volume = 0.7;
 pleaseSelectScaleAudio.volume = 0.7;
-voicingAudio.volume = 0.7;
+voicingAudio.volume = 0.65;
+addChordAudio.volume = 0.55;
 
 function playSlotMachineSound() {
     slotMachineAudio.currentTime = 0;  // Reset the audio to the beginning
