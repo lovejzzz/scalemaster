@@ -253,16 +253,19 @@ function selectChord(chord, index) {
 
 // Function to update the display of selected chords
 function updateChordDisplay() {
-    const scaleList = document.getElementById('scale-list');
     const chordDisplay = document.getElementById('chord-display');
+    const scaleList = document.getElementById('scale-list');
     
     // Clear the existing list
     scaleList.innerHTML = '';
     
-    // If this is the first scale being added, show the display and remember it
-    if (chordList.length > 0 && !localStorage.getItem('hasAddedScale')) {
-        localStorage.setItem('hasAddedScale', 'true');
+    // If this is the first scale being added, show the display and MIDI status
+    if (chordList.length > 0) {
         chordDisplay.classList.add('has-scales');
+        document.body.classList.add('has-scales');
+    } else {
+        chordDisplay.classList.remove('has-scales');
+        document.body.classList.remove('has-scales');
     }
     
     // Create and append list items for each chord
@@ -344,13 +347,14 @@ document.getElementById('add-chord').addEventListener('click', () => {
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
     
-    if (rootNote && scaleMode) {
-        const newChord = { rootNote, scaleMode };
-        chordList.push(newChord);
-        updateChordDisplay();
-        selectChord(newChord, chordList.length - 1);
-        playAddChordSound();
-    }
+    // Add the chord to the list
+    chordList.push({ rootNote, scaleMode });
+    updateChordDisplay();
+    
+    // Select the newly added chord
+    selectChord(chordList[chordList.length - 1], chordList.length - 1);
+    
+    playAddChordSound();
 });
 
 // Trash can functionality
@@ -397,10 +401,10 @@ trashCan.addEventListener('click', () => {
     updateChordDisplay();
     updateSectionVisibility();
     clearHighlightedKeys();
-    localStorage.removeItem('savedScales');
+    localStorage.clear();
     const chordDisplay = document.getElementById('chord-display');
     chordDisplay.classList.remove('has-scales');
-    localStorage.removeItem('hasAddedScale');
+    document.body.classList.remove('has-scales');
 });
 
 function clearHighlightedKeys() {
@@ -733,6 +737,9 @@ document.getElementById('scale-category').addEventListener('change', () => {
     selectScaleAudio.currentTime = 0;
     selectScaleAudio.play();
     updateScaleModes();
+    const rootNote = document.getElementById('root-note').value;
+    const scaleMode = document.getElementById('scale-mode').value;
+    updateKeyboard(rootNote, scaleMode);
 });
 
 document.getElementById('scale-mode').addEventListener('change', () => {
@@ -740,15 +747,22 @@ document.getElementById('scale-mode').addEventListener('change', () => {
     selectScaleAudio.play();
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
-    selectedScale = { rootNote, scaleMode };
     updateKeyboard(rootNote, scaleMode);
 });
 
-document.getElementById('voicing-type').addEventListener('change', () => {
-    const generateVoicingButton = document.getElementById('generate-voicing');
-    if (generateVoicingButton) {
-        generateVoicingButton.click();
-    }
+document.querySelectorAll('#root-note option, #scale-category option, #scale-mode option').forEach(option => {
+    option.addEventListener('mouseover', () => {
+        const rootNote = option.parentElement.id === 'root-note' ? option.value : document.getElementById('root-note').value;
+        const scaleMode = option.parentElement.id === 'scale-mode' ? option.value : document.getElementById('scale-mode').value;
+        updateKeyboard(rootNote, scaleMode);
+    });
+    
+    // Restore original selection when mouse leaves
+    option.addEventListener('mouseout', () => {
+        const rootNote = document.getElementById('root-note').value;
+        const scaleMode = document.getElementById('scale-mode').value;
+        updateKeyboard(rootNote, scaleMode);
+    });
 });
 
 // Initialize the keyboard
@@ -764,23 +778,33 @@ document.getElementById('scale-mode').addEventListener('change', adjustVoicingTy
 
 // Initialize sections as hidden
 document.addEventListener('DOMContentLoaded', () => {
-    updateSectionVisibility();
     const chordDisplay = document.getElementById('chord-display');
+    const trashCan = document.getElementById('trash-can');
     
-    // Restore visibility state
-    if (localStorage.getItem('hasAddedScale')) {
-        chordDisplay.classList.add('has-scales');
-    }
+    // Initially hide the chord display and center the layout
+    chordDisplay.classList.remove('has-scales');
+    document.body.classList.remove('has-scales');
     
-    // Restore saved scales
-    const savedScales = localStorage.getItem('savedScales');
-    if (savedScales) {
-        chordList.push(...JSON.parse(savedScales));
+    // Add click handler for trash can
+    trashCan.addEventListener('click', () => {
+        playClearSound();
+        chordList.length = 0;
+        selectedScale = null;
         updateChordDisplay();
-        if (chordList.length > 0) {
-            selectChord(chordList[0], 0);
-        }
-    }
+        updateSectionVisibility();
+        clearHighlightedKeys();
+        localStorage.clear();
+        chordDisplay.classList.remove('has-scales');
+        document.body.classList.remove('has-scales');
+    });
+    
+    // Clear any existing state
+    localStorage.clear();
+    chordList.length = 0;
+    selectedScale = null;
+    updateChordDisplay();
+    updateSectionVisibility();
+    clearHighlightedKeys();
 });
 
 // Add keyboard shortcuts

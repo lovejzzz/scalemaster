@@ -25,3 +25,7 @@ A jazz scale look-up website.
 1.7 version: The tooltip text will have better line break. Fix the piano play, now based on the mouse click down instead click release. 
 
 1.71 version: Fix bugs. 
+
+1.72 version: Simple initial layout.
+
+1.73 version: Title image changed to high quality gif. Added animation for the transition.
