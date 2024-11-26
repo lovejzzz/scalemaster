@@ -49,7 +49,6 @@ body:not(.has-scales) #play-buttons {
 header {
     font-family: "IM Fell Great Primer", serif;
     font-weight: 400;
-    font-style: normal;
     text-align: center;
     margin-bottom: 2rem;
     transition: all 0.5s ease-in-out;
@@ -285,6 +284,7 @@ li {
     white-space: nowrap;
     margin: 5px;
     overflow: hidden;  /* Add this to contain the reflection */
+    color: #333;
 }
 
 li:hover {
@@ -1116,4 +1116,9 @@ body:not(.has-scales) .title {
     font-size: 4rem;
     margin-bottom: 4rem;
     margin-top: -8rem;
+}
+
+/* Apply font to all text elements */
+body, button, select, input, label, .tooltip-text, #chord-display {
+    font-family: "IM Fell Great Primer", serif;
 }
