@@ -6,25 +6,25 @@ class TitleAnimator {
         this.animationInterval = null;
         this.ANIMATION_SPEED = 100; // milliseconds between frames
         this.ANIMATION_DURATION = 2000; // total animation duration in milliseconds
-        this.initialTitleSrc = '/asset/Title.gif'; // Store the initial title source
+        this.initialTitleSrc = './asset/Title.gif'; // Store the initial title source
     }
 
     // Load all images from the TitleAnimation folder
     async loadAnimationImages() {
         try {
-            // Create the list of image paths with absolute paths
+            // Create the list of image paths with relative paths
             this.animationImages = [
-                '/asset/TitleAnimation/Title2.gif',
-                '/asset/TitleAnimation/Title3.gif',
-                '/asset/TitleAnimation/Title4.gif',
-                '/asset/TitleAnimation/Title5.gif',
-                '/asset/TitleAnimation/Title6.gif',
-                '/asset/TitleAnimation/Title7.gif',
-                '/asset/TitleAnimation/Title8.gif',
-                '/asset/TitleAnimation/Title9.gif',
-                '/asset/TitleAnimation/Title10.gif',
-                '/asset/TitleAnimation/Title11.gif',
-                '/asset/TitleAnimation/Title12.gif'
+                './asset/TitleAnimation/Title2.gif',
+                './asset/TitleAnimation/Title3.gif',
+                './asset/TitleAnimation/Title4.gif',
+                './asset/TitleAnimation/Title5.gif',
+                './asset/TitleAnimation/Title6.gif',
+                './asset/TitleAnimation/Title7.gif',
+                './asset/TitleAnimation/Title8.gif',
+                './asset/TitleAnimation/Title9.gif',
+                './asset/TitleAnimation/Title10.gif',
+                './asset/TitleAnimation/Title11.gif',
+                './asset/TitleAnimation/Title12.gif'
             ];
             
             // Shuffle the array

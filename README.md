@@ -33,3 +33,5 @@ A jazz scale look-up website.
 1.74 version: Title shuffle animation added, will play when no scales in the playlist. When click the title image, it will reset to the initial title.
 
 1.75 version: Fix bugs. Now the selection made in drop down menu will real-time update the piano keyboard.
+
+1.76 version: Fix the file paths of the title animation.

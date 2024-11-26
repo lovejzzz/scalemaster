@@ -729,13 +729,13 @@ let audioContext = null;
 
 // Audio elements
 const audioElements = {
-    coinInsert: new Audio('asset/CoinInsert.wav'),
-    slotMachine: new Audio('asset/slot-machine.mp3'),
-    addChord: new Audio('asset/add.wav'),
-    clear: new Audio('asset/clear.mp3'),
-    selectScale: new Audio('asset/ClickScaleInTheList.mp3'),
-    pleaseSelectScale: new Audio('asset/PleaseSelectAScaleFromTheListFirst.wav'),
-    voicing: new Audio('asset/voicing.wav')
+    coinInsert: new Audio('./asset/CoinInsert.wav'),
+    slotMachine: new Audio('./asset/slot-machine.mp3'),
+    addChord: new Audio('./asset/add.wav'),
+    clear: new Audio('./asset/clear.mp3'),
+    selectScale: new Audio('./asset/ClickScaleInTheList.mp3'),
+    pleaseSelectScale: new Audio('./asset/PleaseSelectAScaleFromTheListFirst.wav'),
+    voicing: new Audio('./asset/voicing.wav')
 };
 
 // Set initial volumes
