@@ -390,6 +390,19 @@ document.addEventListener('dragend', () => {
     trashCan.classList.remove('drag-over');
 });
 
+trashCan.addEventListener('click', () => {
+    playClearSound();
+    chordList.length = 0;
+    selectedScale = null;
+    updateChordDisplay();
+    updateSectionVisibility();
+    clearHighlightedKeys();
+    localStorage.removeItem('savedScales');
+    const chordDisplay = document.getElementById('chord-display');
+    chordDisplay.classList.remove('has-scales');
+    localStorage.removeItem('hasAddedScale');
+});
+
 function clearHighlightedKeys() {
     const highlightedKeys = document.querySelectorAll('.highlighted');
     highlightedKeys.forEach(key => {
