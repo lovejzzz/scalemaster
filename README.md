@@ -36,4 +36,6 @@ A jazz scale look-up website.
 
 1.76 version: Fix the file paths of the title animation.
 
-1.77 version: Test gif loading.
+1.77 version: Test gif loading. After rebuild the project, it fixed the gif loading issue.
+
+1.78 version: Fix voicing type selection, now it can update the piano keyboard when the voicing type is changed. Fix the sound effect initialization timing.1

@@ -279,6 +279,9 @@ function updateChordDisplay() {
 
 // Add chord button event listener
 document.getElementById('add-chord').addEventListener('click', () => {
+    // Initialize audio first
+    initializeAudioContext();
+    
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
     
@@ -460,91 +463,20 @@ function updateKeyboardForVoicing(voicing) {
     });
 }
 
-// Create custom alert elements
-const modalOverlay = document.createElement('div');
-modalOverlay.className = 'modal-overlay';
-document.body.appendChild(modalOverlay);
-
-const customAlert = document.createElement('div');
-customAlert.className = 'custom-alert';
-customAlert.innerHTML = `
-    <div class="custom-alert-message"></div>
-    <button class="custom-alert-button">OK</button>
-`;
-document.body.appendChild(customAlert);
-
-function showCustomAlert(message) {
-    const messageElement = customAlert.querySelector('.custom-alert-message');
-    messageElement.textContent = message;
-    modalOverlay.classList.add('show');
-    customAlert.classList.add('show');
-
-    const closeButton = customAlert.querySelector('.custom-alert-button');
-    const closeAlert = () => {
-        modalOverlay.classList.remove('show');
-        customAlert.classList.remove('show');
-        closeButton.removeEventListener('click', closeAlert);
-    };
-    closeButton.addEventListener('click', closeAlert);
-}
-
-// Function to update voicing button text and add animation
-function updateVoicingButton(voicingType, forceUpdate = false) {
-    const generateVoicingButton = document.getElementById('generate-voicing');
-    if (generateVoicingButton) {
-        const currentText = generateVoicingButton.textContent;
-        const newText = voicingType === '4+0' ? 'Voicing' : 'Re-Voicing';
-        
-        // Only update if text is different or force update is true
-        if (currentText !== newText || forceUpdate) {
-            generateVoicingButton.textContent = newText;
-            
-            // Only add animation if it's not 4+0 type
-            if (voicingType !== '4+0') {
-                addReflectionAnimation(generateVoicingButton);
-            }
-        }
-    }
-}
-
-// Function to add reflection animation to an element
-function addReflectionAnimation(element) {
-    // Remove any existing overlays
-    const existingOverlay = element.querySelector('.reflection-overlay');
-    if (existingOverlay) {
-        existingOverlay.remove();
-    }
-
-    const overlay = document.createElement('div');
-    overlay.className = 'reflection-overlay active'; // Add active class immediately
-    
-    // Calculate animation distances based on element width
-    const elementWidth = element.offsetWidth;
-    const startX = -elementWidth * 0.5;  // Start from 50% left of the element
-    const endX = elementWidth * 1.5;     // End at 150% of the element width
-    
-    // Set the CSS variables
-    overlay.style.setProperty('--start-x', `${startX}px`);
-    overlay.style.setProperty('--end-x', `${endX}px`);
-    
-    // Add the overlay to the element
-    element.appendChild(overlay);
-
-    // Clean up after animation
-    setTimeout(() => {
-        if (overlay && overlay.parentElement) {
-            overlay.remove();
-        }
-    }, 800); // Match animation duration
-}
-
 // Add event listener for voicing type to auto-generate voicing
 document.getElementById('voicing-type').addEventListener('change', () => {
     const voicingType = document.getElementById('voicing-type').value;
-    const generateVoicingButton = document.getElementById('generate-voicing');
-    if (generateVoicingButton) {
+    if (selectedScale) {
+        const rootNote = selectedScale.rootNote;
+        const scaleMode = selectedScale.scaleMode;
+        const voicing = generateFourWayClose(rootNote, scaleMode, voicingType);
+        lastVoicing = voicing;
+        playAudio(audioElements.voicing);
+        updateKeyboardForVoicing(voicing);
         updateVoicingButton(voicingType);
-        generateVoicingButton.click();
+    } else {
+        playAudio(audioElements.pleaseSelectScale);
+        showCustomAlert("Please select a scale from the list first.");
     }
 });
 
@@ -556,13 +488,11 @@ document.getElementById('generate-voicing').addEventListener('click', () => {
         const voicingType = document.getElementById('voicing-type').value;
         const voicing = generateFourWayClose(rootNote, scaleMode, voicingType);
         lastVoicing = voicing;
-        voicingAudio.currentTime = 0;
-        voicingAudio.play();
+        playAudio(audioElements.voicing);
         updateKeyboardForVoicing(voicing);
         updateVoicingButton(voicingType, true); // Force update on click
     } else {
-        pleaseSelectScaleAudio.currentTime = 0;
-        pleaseSelectScaleAudio.play();
+        playAudio(audioElements.pleaseSelectScale);
         showCustomAlert("Please select a scale from the list first.");
     }
 });
@@ -945,3 +875,81 @@ document.getElementById('random-chord').addEventListener('click', async () => {
         adjustVoicingTypes();
     }, 2050);
 });
+
+// Create custom alert elements
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'modal-overlay';
+document.body.appendChild(modalOverlay);
+
+const customAlert = document.createElement('div');
+customAlert.className = 'custom-alert';
+customAlert.innerHTML = `
+    <div class="custom-alert-message"></div>
+    <button class="custom-alert-button">OK</button>
+`;
+document.body.appendChild(customAlert);
+
+function showCustomAlert(message) {
+    const messageElement = customAlert.querySelector('.custom-alert-message');
+    messageElement.textContent = message;
+    modalOverlay.classList.add('show');
+    customAlert.classList.add('show');
+
+    const closeButton = customAlert.querySelector('.custom-alert-button');
+    const closeAlert = () => {
+        modalOverlay.classList.remove('show');
+        customAlert.classList.remove('show');
+        closeButton.removeEventListener('click', closeAlert);
+    };
+    closeButton.addEventListener('click', closeAlert);
+}
+
+// Function to update voicing button text and add animation
+function updateVoicingButton(voicingType, forceUpdate = false) {
+    const generateVoicingButton = document.getElementById('generate-voicing');
+    if (generateVoicingButton) {
+        const currentText = generateVoicingButton.textContent;
+        const newText = voicingType === '4+0' ? 'Voicing' : 'Re-Voicing';
+        
+        // Only update if text is different or force update is true
+        if (currentText !== newText || forceUpdate) {
+            generateVoicingButton.textContent = newText;
+            
+            // Only add animation if it's not 4+0 type
+            if (voicingType !== '4+0') {
+                addReflectionAnimation(generateVoicingButton);
+            }
+        }
+    }
+}
+
+// Function to add reflection animation to an element
+function addReflectionAnimation(element) {
+    // Remove any existing overlays
+    const existingOverlay = element.querySelector('.reflection-overlay');
+    if (existingOverlay) {
+        existingOverlay.remove();
+    }
+
+    const overlay = document.createElement('div');
+    overlay.className = 'reflection-overlay active'; // Add active class immediately
+    
+    // Calculate animation distances based on element width
+    const elementWidth = element.offsetWidth;
+    const startX = -elementWidth * 0.5;  // Start from 50% left of the element
+    const endX = elementWidth * 1.5;     // End at 150% of the element width
+    
+    // Set the CSS variables
+    overlay.style.setProperty('--start-x', `${startX}px`);
+    overlay.style.setProperty('--end-x', `${endX}px`);
+    
+    // Add the overlay to the element
+    element.appendChild(overlay);
+
+    // Clean up after animation
+    setTimeout(() => {
+        if (overlay && overlay.parentElement) {
+            overlay.remove();
+        }
+    }, 800); // Match animation duration
+}
