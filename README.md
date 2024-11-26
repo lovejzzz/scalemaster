@@ -9,3 +9,5 @@ A jazz scale look-up website.
 1.4 version: Added description for each button. Tooltip icon changed. The title text change to gif.
 
 1.5 version: The piano will updater the highlighted keys when the scale is changed.
+
+1.6 version: More sound effects are added. Animation for the new added scale.

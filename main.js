@@ -16,6 +16,37 @@ const tonicToNote = {
     'A#': 'A#3', 'B': 'B3'
 };
 
+const modeToScale = {
+    // Major modes
+    'Ionian': 'Major',
+    'Dorian': 'Dorian',
+    'Phrygian': 'Phrygian',
+    'Lydian': 'Lydian',
+    'Mixolydian': 'Mixolydian',
+    'Aeolian': 'Natural Minor',
+    'Locrian': 'Locrian',
+    // Harmonic Minor modes
+    'Harmonic Minor': 'Harmonic Minor',
+    'Locrian Natural 6 (HM2)': 'Harmonic Minor',
+    'Ionian Augmented (HM3)': 'Harmonic Minor',
+    'Dorian Sharp 4 (HM4)': 'Harmonic Minor',
+    'Phrygian Dominant (HM5)': 'Harmonic Minor',
+    'Lydian Sharp 2 (HM6)': 'Harmonic Minor',
+    'Ultralocrian (HM7)': 'Harmonic Minor',
+    // Melodic Minor modes
+    'Melodic Minor': 'Melodic Minor',
+    'Dorian Flat 2 (MM2)': 'Melodic Minor',
+    'Lydian Augmented (MM3)': 'Melodic Minor',
+    'Lydian Dominant (MM4)': 'Melodic Minor',
+    'Mixolydian Flat 6 (MM5)': 'Melodic Minor',
+    'Locrian Natural 2 (MM6)': 'Melodic Minor',
+    'Altered Scale (MM7)': 'Melodic Minor',
+    // Other scales
+    'Whole Tone': 'Whole Tone',
+    'Diminished WH': 'Diminished WH',
+    'Diminished HW': 'Diminished HW'
+};
+
 const scaleModes = {
     major: [
         { value: 'Ionian', name: 'Ionian' },
@@ -52,30 +83,36 @@ const scaleModes = {
 };
 
 const scales = {
-    'Ionian': [2, 2, 1, 2, 2, 2, 1],
+    'Major': [2, 2, 1, 2, 2, 2, 1],
+    'Natural Minor': [2, 1, 2, 2, 1, 2, 2],
+    'Harmonic Minor': [2, 1, 2, 2, 1, 3, 1],
+    'Melodic Minor': [2, 1, 2, 2, 2, 2, 1],
     'Dorian': [2, 1, 2, 2, 2, 1, 2],
     'Phrygian': [1, 2, 2, 2, 1, 2, 2],
     'Lydian': [2, 2, 2, 1, 2, 2, 1],
     'Mixolydian': [2, 2, 1, 2, 2, 1, 2],
-    'Aeolian': [2, 1, 2, 2, 1, 2, 2],
     'Locrian': [1, 2, 2, 1, 2, 2, 2],
-    'Harmonic Minor': [2, 1, 2, 2, 1, 3, 1],
-    'Locrian Natural 6 (HM2)': [1, 2, 1, 2, 3, 1, 2],
-    'Ionian Augmented (HM3)': [2, 2, 1, 3, 1, 2, 1],
-    'Dorian Sharp 4 (HM4)': [2, 1, 3, 1, 2, 1, 2],
-    'Phrygian Dominant (HM5)': [1, 3, 1, 2, 1, 2, 2],
-    'Lydian Sharp 2 (HM6)': [3, 1, 2, 1, 2, 2, 1],
-    'Ultralocrian (HM7)': [1, 2, 1, 2, 2, 1, 3],
-    'Melodic Minor': [2, 1, 2, 2, 2, 2, 1],
-    'Dorian Flat 2 (MM2)': [1, 2, 2, 2, 2, 1, 2],
-    'Lydian Augmented (MM3)': [2, 2, 2, 2, 1, 2, 1],
-    'Lydian Dominant (MM4)': [2, 2, 2, 1, 2, 1, 2],
-    'Mixolydian Flat 6 (MM5)': [2, 2, 1, 2, 1, 2, 2],
-    'Locrian Natural 2 (MM6)': [2, 1, 2, 1, 2, 2, 2],
-    'Altered Scale (MM7)': [1, 2, 1, 2, 2, 2, 2],
     'Whole Tone': [2, 2, 2, 2, 2, 2],
     'Diminished WH': [2, 1, 2, 1, 2, 1, 2, 1],
     'Diminished HW': [1, 2, 1, 2, 1, 2, 1, 2]
+};
+
+const specialScaleConfigurations = {
+    'Whole Tone': {
+        chordTones: [0, 2, 4, 5],
+        extensions: [1, 3],
+        disableVoicingTypes: ['1+3']
+    },
+    'Diminished WH': {
+        chordTones: [0, 2, 4, 6],
+        extensions: [1, 3, 5, 7],
+        disableVoicingTypes: []
+    },
+    'Diminished HW': {
+        chordTones: [0, 3, 4, 7],
+        extensions: [1, 2, 5, 6],
+        disableVoicingTypes: []
+    }
 };
 
 // Add event listeners to each piano key
@@ -109,20 +146,29 @@ function updateScaleModes() {
 
 // Audio setup for UI sounds
 const slotMachineAudio = new Audio('asset/slot-machine.mp3');
-const addChordAudio = new Audio('asset/add.mp3');
+const addChordAudio = new Audio('asset/add.wav');
 const clearAudio = new Audio('asset/clear.mp3');
+const selectScaleAudio = new Audio('asset/ClickScaleInTheList.mp3');
+const pleaseSelectScaleAudio = new Audio('asset/PleaseSelectAScaleFromTheListFirst.wav');
+const voicingAudio = new Audio('asset/voicing.wav');
 
-slotMachineAudio.volume = 0.6;
+slotMachineAudio.volume = 0.7;
+selectScaleAudio.volume = 0.7;
+pleaseSelectScaleAudio.volume = 0.7;
+voicingAudio.volume = 0.7;
 
 function playSlotMachineSound() {
+    slotMachineAudio.currentTime = 0;  // Reset the audio to the beginning
     slotMachineAudio.play();
 }
 
 function playAddChordSound() {
+    addChordAudio.currentTime = 0;  // Reset the audio to the beginning
     addChordAudio.play();
 }
 
 function playClearSound() {
+    clearAudio.currentTime = 0;  // Reset the audio to the beginning
     clearAudio.play();
 }
 
@@ -130,63 +176,54 @@ const chordList = [];
 let selectedScale = null;
 let lastVoicing = null;
 
+// Keep track of active rolling intervals
+let activeRollingIntervals = [];
+
 // Random chord button event listener
 document.getElementById('random-chord').addEventListener('click', () => {
-    const rootNoteMenu = document.getElementById('root-note');
-    const scaleModeMenu = document.getElementById('scale-mode');
-    const scaleCategoryMenu = document.getElementById('scale-category');
-
-    function startRolling() {
-        playSlotMachineSound();
+    playSlotMachineSound();
+    
+    // Store initial values
+    const initialRootNote = document.getElementById('root-note').value;
+    const initialScaleMode = document.getElementById('scale-mode').value;
+    
+    function rollOnce() {
         const rootNoteSelect = document.getElementById('root-note');
         const scaleCategorySelect = document.getElementById('scale-category');
         const scaleModeSelect = document.getElementById('scale-mode');
 
-        return setInterval(() => {
-            // Randomly select values
-            rootNoteSelect.selectedIndex = Math.floor(Math.random() * rootNoteSelect.options.length);
-            scaleCategorySelect.selectedIndex = Math.floor(Math.random() * scaleCategorySelect.options.length);
-            updateScaleModes();
-            scaleModeSelect.selectedIndex = Math.floor(Math.random() * scaleModeSelect.options.length);
-
-            // Update piano display
-            const rootNote = rootNoteSelect.value;
-            const scaleMode = scaleModeSelect.value;
-            updateKeyboard(rootNote, scaleMode);
-        }, 100);
-    }
-
-    function stopRolling() {
-        const rootNoteSelect = document.getElementById('root-note');
-        const scaleCategorySelect = document.getElementById('scale-category');
-        const scaleModeSelect = document.getElementById('scale-mode');
-
-        // Randomly select final values
+        // Randomly select values
         rootNoteSelect.selectedIndex = Math.floor(Math.random() * rootNoteSelect.options.length);
         scaleCategorySelect.selectedIndex = Math.floor(Math.random() * scaleCategorySelect.options.length);
         updateScaleModes();
         scaleModeSelect.selectedIndex = Math.floor(Math.random() * scaleModeSelect.options.length);
 
-        // Update piano display one last time
+        // Update piano display
         const rootNote = rootNoteSelect.value;
         const scaleMode = scaleModeSelect.value;
         updateKeyboard(rootNote, scaleMode);
+    }
 
-        // Update voicing types based on the selected scale
-        adjustVoicingTypes();
+    // Start rolling animation
+    const rollInterval = setInterval(rollOnce, 100);
 
+    // Stop rolling and add chord after animation
+    setTimeout(() => {
+        clearInterval(rollInterval);
+        
+        // Get final random values
+        const rootNote = document.getElementById('root-note').value;
+        const scaleMode = document.getElementById('scale-mode').value;
+        
         // Add the new chord to the list
         const newChord = { rootNote, scaleMode };
         chordList.push(newChord);
         updateChordDisplay();
         selectChord(newChord, chordList.length - 1);
-    }
-
-    const rollInterval = startRolling();
-    setTimeout(() => {
-        clearInterval(rollInterval);
-        stopRolling();
-    }, 1400);
+        
+        // Update voicing types
+        adjustVoicingTypes();
+    }, 2050);
 });
 
 // Function to select a chord
@@ -203,11 +240,18 @@ function selectChord(chord, index) {
 // Function to update the display of selected chords
 function updateChordDisplay() {
     const chordDisplay = document.getElementById('chord-list');
+    // Clear existing content
     chordDisplay.innerHTML = '';
+    
+    // Update display for each chord
     chordList.forEach((chord, index) => {
         const listItem = document.createElement('li');
         listItem.textContent = `${chord.rootNote} ${chord.scaleMode}`;
         listItem.setAttribute('draggable', true);
+
+        const reflectionOverlay = document.createElement('div');
+        reflectionOverlay.className = 'reflection-overlay';
+        listItem.appendChild(reflectionOverlay);
 
         listItem.addEventListener('dblclick', () => {
             chordList.splice(index, 1);
@@ -222,6 +266,8 @@ function updateChordDisplay() {
         });
 
         listItem.addEventListener('click', () => {
+            selectScaleAudio.currentTime = 0;
+            selectScaleAudio.play();
             selectChord(chord, index);
         });
 
@@ -249,6 +295,19 @@ function updateChordDisplay() {
         });
 
         chordDisplay.appendChild(listItem);
+
+        // Add reflection animation to the newest chord
+        if (index === chordList.length - 1) {
+            // Force a reflow to get accurate width
+            listItem.offsetHeight;
+            const width = listItem.offsetWidth;
+            reflectionOverlay.style.setProperty('--start-x', `-${width}px`);
+            reflectionOverlay.style.setProperty('--end-x', `${width * 1.5}px`);
+            reflectionOverlay.classList.add('reflection-animation');
+            setTimeout(() => {
+                reflectionOverlay.remove();
+            }, 1500);
+        }
     });
 }
 
@@ -310,14 +369,15 @@ function clearHighlightedKeys() {
 function getScaleIndices(tonic, scaleType) {
     const tonicNote = tonicToNote[tonic];
     const tonicIndex = noteIndices[tonicNote];
-    const scaleIntervals = scales[scaleType];
+    const actualScaleType = modeToScale[scaleType] || scaleType;
+    const intervals = scales[actualScaleType];
     const scaleIndices = [tonicIndex];
     let currentIndex = tonicIndex;
 
-    for (let i = 0; i < scaleIntervals.length; i++) {
-        currentIndex += scaleIntervals[i];
+    for (let i = 0; i < intervals.length; i++) {
+        currentIndex += intervals[i];
         if (currentIndex >= notes.length) {
-            break;
+            currentIndex -= 12;
         }
         scaleIndices.push(currentIndex);
     }
@@ -339,25 +399,6 @@ function updateKeyboard(tonic, scaleType) {
         }
     });
 }
-
-// Define special scale configurations
-const specialScaleConfigurations = {
-    'Whole Tone': {
-        chordTones: [0, 2, 4, 5],
-        extensions: [1, 3],
-        disableVoicingTypes: ['1+3']
-    },
-    'Diminished WH': {
-        chordTones: [0, 2, 4, 6],
-        extensions: [1, 3, 5, 7],
-        disableVoicingTypes: []
-    },
-    'Diminished HW': {
-        chordTones: [0, 3, 4, 7],
-        extensions: [1, 2, 5, 6],
-        disableVoicingTypes: []
-    }
-};
 
 // Function to generate four-way close voicing
 function generateFourWayClose(tonic, scaleType, voicingType) {
@@ -411,7 +452,6 @@ function generateFourWayClose(tonic, scaleType, voicingType) {
         }
     } while (JSON.stringify(voicing) === JSON.stringify(lastVoicing) && voicingType !== '4+0');
 
-    lastVoicing = voicing;
     return voicing;
 }
 
@@ -429,6 +469,34 @@ function updateKeyboardForVoicing(voicing) {
     });
 }
 
+// Create custom alert elements
+const modalOverlay = document.createElement('div');
+modalOverlay.className = 'modal-overlay';
+document.body.appendChild(modalOverlay);
+
+const customAlert = document.createElement('div');
+customAlert.className = 'custom-alert';
+customAlert.innerHTML = `
+    <div class="custom-alert-message"></div>
+    <button class="custom-alert-button">OK</button>
+`;
+document.body.appendChild(customAlert);
+
+function showCustomAlert(message) {
+    const messageElement = customAlert.querySelector('.custom-alert-message');
+    messageElement.textContent = message;
+    modalOverlay.classList.add('show');
+    customAlert.classList.add('show');
+
+    const closeButton = customAlert.querySelector('.custom-alert-button');
+    const closeAlert = () => {
+        modalOverlay.classList.remove('show');
+        customAlert.classList.remove('show');
+        closeButton.removeEventListener('click', closeAlert);
+    };
+    closeButton.addEventListener('click', closeAlert);
+}
+
 // Generate voicing button event listener
 document.getElementById('generate-voicing').addEventListener('click', () => {
     if (selectedScale) {
@@ -436,9 +504,14 @@ document.getElementById('generate-voicing').addEventListener('click', () => {
         const scaleMode = selectedScale.scaleMode;
         const voicingType = document.getElementById('voicing-type').value;
         const voicing = generateFourWayClose(rootNote, scaleMode, voicingType);
+        lastVoicing = voicing;
+        voicingAudio.currentTime = 0;
+        voicingAudio.play();
         updateKeyboardForVoicing(voicing);
     } else {
-        alert("Please select a scale from the list first.");
+        pleaseSelectScaleAudio.currentTime = 0;
+        pleaseSelectScaleAudio.play();
+        showCustomAlert("Please select a scale from the list first.");
     }
 });
 
@@ -530,13 +603,16 @@ document.getElementById('scale-category').addEventListener('change', () => {
 });
 
 document.getElementById('scale-mode').addEventListener('change', () => {
+    selectScaleAudio.currentTime = 0;
+    selectScaleAudio.play();
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
+    selectedScale = { rootNote, scaleMode };
     updateKeyboard(rootNote, scaleMode);
 });
 
 // Initialize the keyboard
-updateKeyboard('C', 'Ionian');
+updateKeyboard('C', 'Major');
 
 // Initialize scale modes and voicing types
 updateScaleModes();
