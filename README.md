@@ -29,3 +29,5 @@ A jazz scale look-up website.
 1.72 version: Simple initial layout.
 
 1.73 version: Title image changed to high quality gif. Added animation for the transition.
+
+1.74 version: Title shuffleanimation added, will play when no scales in the playlist. When click the title image, it will reset to the initial title.

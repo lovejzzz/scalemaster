@@ -1,4 +1,5 @@
 import { playNoteWithSynth, noteFrequencies } from './piano.js';
+import { titleAnimator } from './titleAnimation.js';
 
 const notes = [
     'C3', 'C#3', 'D3', 'D#3', 'E3', 'F3', 'F#3', 'G3', 'G#3', 'A3', 'A#3', 'B3',
@@ -188,7 +189,16 @@ function saveScales() {
 }
 
 // Random chord button event listener
-document.getElementById('random-chord').addEventListener('click', () => {
+document.getElementById('random-chord').addEventListener('click', async () => {
+    // Start title animation if no scales
+    if (chordList.length === 0) {
+        const success = await titleAnimator.loadAnimationImages();
+        if (success) {
+            titleAnimator.startAnimation(document.querySelector('.title-image').src);
+        }
+    }
+
+    // Always do the normal randomization
     playSlotMachineSound();
     
     // Store initial values
