@@ -240,9 +240,22 @@ function updateChordDisplay() {
         });
 
         listItem.addEventListener('click', () => {
-            selectScaleAudio.currentTime = 0;
-            selectScaleAudio.play();
+            // Initialize audio first
+            initializeAudioContext();
+            
+            // Play selection sound
+            playAudio(audioElements.selectScale);
+            
+            // Select the chord first
             selectChord(chord, index);
+            
+            // Trigger reflection animation
+            const reflectionOverlay = listItem.querySelector('.reflection-overlay');
+            reflectionOverlay.offsetHeight; // Force reflow
+            reflectionOverlay.classList.add('reflection-animation');
+            reflectionOverlay.addEventListener('animationend', () => {
+                reflectionOverlay.classList.remove('reflection-animation');
+            }, { once: true });
         });
 
         listItem.addEventListener('dblclick', () => {
@@ -663,7 +676,7 @@ const audioElements = {
     slotMachine: new Audio('./asset/slot-machine.mp3'),
     addChord: new Audio('./asset/add.wav'),
     clear: new Audio('./asset/clear.mp3'),
-    selectScale: new Audio('./asset/ClickScaleInTheList.mp3'),
+    selectScale: new Audio('./asset/select.mp3'),
     pleaseSelectScale: new Audio('./asset/PleaseSelectAScaleFromTheListFirst.wav'),
     voicing: new Audio('./asset/voicing.wav')
 };

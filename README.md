@@ -41,3 +41,5 @@ A jazz scale look-up website.
 1.78 version: Fix voicing type selection, now it can update the piano keyboard when the voicing type is changed. Fix the sound effect initialization timing.
 
 1.79 version: Font of the website is all set to "IM Fell Great Primer".
+
+1.795 version: Fix bugs.
