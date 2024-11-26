@@ -21,3 +21,5 @@ A jazz scale look-up website.
 1.68 version: Animation for all buttons.
 
 1.69 version: Layout changes, the scale list will be displayed after the user select the first scale. And the voicing section and audio play buttons will only be visible when at least one scale been selected.
+
+1.7 version: The tooltip textwill have better line break. Fix the piano play, now based on the mouse click down instead click release. 

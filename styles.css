@@ -824,118 +824,70 @@ li:hover {
     opacity: 0.5;
 }
 
+/* Make sections relative for absolute positioning */
+#chord-display, #voicing-section {
+    position: relative;
+}
+
 /* Tooltip Container */
 .tooltip-container {
-    position: relative;
-    float: right;
-    margin-left: 20px;
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+/* Tooltip Text */
+.tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 200px;  /* Adjust this value to control wrap point */
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: left;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-wrap: break-word;  /* Enable word wrapping */
+    white-space: normal;    /* Allow text to wrap */
+    
+    /* Positioning */
+    position: absolute;
+    z-index: 1000;
+    bottom: 5px;
+    right: 100%;
+    margin-right: 10px;
+    transform: translateY(0%);
+    
+    /* Animation */
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Tooltip Arrow */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 50%;  /* Keep arrow vertically centered */
+    left: 100%;
+    transform: translateY(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent transparent rgba(0, 0, 0, 0.8);
+}
+
+/* Show tooltip */
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
 }
 
 /* Tooltip Icon */
 .tooltip-icon {
     width: 20px;
     height: 20px;
-    cursor: pointer;
-}
-
-/* General Tooltip Text Styling */
-.tooltip-text {
-    visibility: hidden;
-    width: min(190px, 40vw);
-    background-color: #555;
-    color: #fff;
-    text-align: center;
-    border-radius: 5px;
-    padding: 5px;
-    position: absolute;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-/* Show Tooltip on Hover */
-.tooltip-container:hover .tooltip-text {
-    visibility: visible;
-    opacity: 1;
-}
-
-/* Native browser tooltip styles */
-[title] {
-    position: relative;
-    transition-delay: 0s !important;
-}
-
-/* Position the tooltip container at the bottom right of the voicing section */
-#voicing-section .tooltip-container {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    float: none;
-    margin-left: 0;
-}
-
-/* Chord Display Tooltip Adjustments */
-#chord-display {
-    display: none;
-    position: relative;
-}
-
-#chord-display.has-scales {
-    display: block;
-}
-
-#chord-display h2 {
-    display: inline-block;
-    margin-right: 10px;
-}
-
-#chord-display .tooltip-container {
-    position: absolute;
-    bottom: 5px;
-    right: 5px;
-    float: none;
-    margin-left: 0;
-}
-
-#chord-display .tooltip-text {
-    bottom: 100%;
-    right: 0;
-    transform: none;
-    margin-bottom: 10px;
-    margin-right: 0;
-}
-
-/* Tooltip Arrow for Chord Display */
-#chord-display .tooltip-text::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    margin-top: 0;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
-}
-
-/* Tooltip Text Styling for Chord Display */
-#chord-display .tooltip-text {
-    bottom: 100%;
-    right: 0;
-    transform: none;
-    margin-bottom: 10px;
-    margin-right: 0;
-}
-
-/* Tooltip Arrow for Chord Display */
-#chord-display .tooltip-text::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    right: 10px;
-    margin-top: 0;
-    border-width: 5px;
-    border-style: solid;
-    border-color: #555 transparent transparent transparent;
+    cursor: help;
+    vertical-align: middle;
 }
 
 /* Scale List Animation */
