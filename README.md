@@ -19,3 +19,5 @@ A jazz scale look-up website.
 1.67 version: Tooltip size optimized. Animation of reflection optimized.
 
 1.68 version: Animation for all buttons.
+
+1.69 version: Layout changes, the scale list will be displayed after the user select the first scale. And the voicing section and audio play buttons will only be visible when at least one scale been selected.

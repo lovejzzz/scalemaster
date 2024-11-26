@@ -182,6 +182,11 @@ let lastVoicing = null;
 // Keep track of active rolling intervals
 let activeRollingIntervals = [];
 
+// Function to save scales to localStorage
+function saveScales() {
+    localStorage.setItem('savedScales', JSON.stringify(chordList));
+}
+
 // Random chord button event listener
 document.getElementById('random-chord').addEventListener('click', () => {
     playSlotMachineSound();
@@ -239,6 +244,7 @@ function selectChord(chord, index) {
     selectedScale = chord;
     updateKeyboard(chord.rootNote, chord.scaleMode);
     updateVoicingTypeMenuState();
+    updateSectionVisibility();
     // Reset voicing button text when new scale is selected
     const generateVoicingButton = document.getElementById('generate-voicing');
     generateVoicingButton.textContent = 'Voicing';
@@ -247,41 +253,31 @@ function selectChord(chord, index) {
 
 // Function to update the display of selected chords
 function updateChordDisplay() {
-    const chordDisplay = document.getElementById('scale-list');
-    const trashCan = document.getElementById('trash-can');
-
-    // Clear existing content
-    chordDisplay.innerHTML = '';
+    const scaleList = document.getElementById('scale-list');
+    const chordDisplay = document.getElementById('chord-display');
     
-    // Update display for each chord
+    // Clear the existing list
+    scaleList.innerHTML = '';
+    
+    // If this is the first scale being added, show the display and remember it
+    if (chordList.length > 0 && !localStorage.getItem('hasAddedScale')) {
+        localStorage.setItem('hasAddedScale', 'true');
+        chordDisplay.classList.add('has-scales');
+    }
+    
+    // Create and append list items for each chord
     chordList.forEach((chord, index) => {
         const listItem = document.createElement('li');
         listItem.textContent = `${chord.rootNote} ${chord.scaleMode}`;
         listItem.setAttribute('draggable', true);
+        listItem.dataset.index = index;
 
+        // Create reflection overlay
         const reflectionOverlay = document.createElement('div');
         reflectionOverlay.className = 'reflection-overlay';
         listItem.appendChild(reflectionOverlay);
 
-        listItem.addEventListener('dblclick', () => {
-            chordList.splice(index, 1);
-            updateChordDisplay();
-            if (chordList.length > 0) {
-                const newIndex = Math.min(index, chordList.length - 1);
-                selectChord(chordList[newIndex], newIndex);
-            } else {
-                selectedScale = null;
-                clearHighlightedKeys();
-                updateVoicingTypeMenuState();
-            }
-        });
-
-        listItem.addEventListener('click', () => {
-            selectScaleAudio.currentTime = 0;
-            selectScaleAudio.play();
-            selectChord(chord, index);
-        });
-
+        // Add drag start event
         listItem.addEventListener('dragstart', (e) => {
             e.dataTransfer.setData('text/plain', index);
             listItem.classList.add('dragging');
@@ -289,7 +285,6 @@ function updateChordDisplay() {
 
         listItem.addEventListener('dragend', () => {
             listItem.classList.remove('dragging');
-            trashCan.classList.remove('drag-hover');
         });
 
         listItem.addEventListener('dragover', (e) => {
@@ -299,75 +294,75 @@ function updateChordDisplay() {
                 const rect = listItem.getBoundingClientRect();
                 const y = e.clientY - rect.top;
                 if (y < rect.height / 2) {
-                    chordDisplay.insertBefore(draggingItem, listItem);
+                    scaleList.insertBefore(draggingItem, listItem);
                 } else {
-                    chordDisplay.insertBefore(draggingItem, listItem.nextSibling);
+                    scaleList.insertBefore(draggingItem, listItem.nextSibling);
                 }
             }
         });
 
-        chordDisplay.appendChild(listItem);
-    });
+        listItem.addEventListener('click', () => {
+            selectScaleAudio.currentTime = 0;
+            selectScaleAudio.play();
+            selectChord(chord, index);
+        });
 
-    // Add drag and drop functionality to trash can
-    trashCan.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        trashCan.classList.add('drag-hover');
-    });
-
-    trashCan.addEventListener('dragleave', () => {
-        trashCan.classList.remove('drag-hover');
-    });
-
-    trashCan.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const index = e.dataTransfer.getData('text/plain');
-        if (index !== '') {
+        listItem.addEventListener('dblclick', () => {
             playClearSound();
-            chordList.splice(parseInt(index), 1);
+            chordList.splice(index, 1);
             updateChordDisplay();
             if (chordList.length > 0) {
-                const newIndex = Math.min(parseInt(index), chordList.length - 1);
+                const newIndex = Math.min(index, chordList.length - 1);
                 selectChord(chordList[newIndex], newIndex);
             } else {
                 selectedScale = null;
                 clearHighlightedKeys();
                 updateVoicingTypeMenuState();
+                updateSectionVisibility();
             }
+        });
+
+        scaleList.appendChild(listItem);
+
+        // If this is a newly added scale (last in the list), trigger the reflection animation
+        if (index === chordList.length - 1) {
+            // Force a reflow to ensure the animation triggers
+            reflectionOverlay.offsetHeight;
+            reflectionOverlay.classList.add('reflection-animation');
+            reflectionOverlay.addEventListener('animationend', () => {
+                reflectionOverlay.classList.remove('reflection-animation');
+            }, { once: true });
         }
-        trashCan.classList.remove('drag-hover');
     });
+
+    // Save the current state
+    saveScales();
 }
 
 // Add chord button event listener
 document.getElementById('add-chord').addEventListener('click', () => {
-    playAddChordSound();
     const rootNote = document.getElementById('root-note').value;
     const scaleMode = document.getElementById('scale-mode').value;
-    const newChord = { rootNote, scaleMode };
-    chordList.push(newChord);
-    updateChordDisplay();
-    selectChord(newChord, chordList.length - 1);
+    
+    if (rootNote && scaleMode) {
+        const newChord = { rootNote, scaleMode };
+        chordList.push(newChord);
+        updateChordDisplay();
+        selectChord(newChord, chordList.length - 1);
+        playAddChordSound();
+    }
 });
 
 // Trash can functionality
 const trashCan = document.getElementById('trash-can');
-
-trashCan.addEventListener('click', () => {
-    playClearSound();
-    chordList.length = 0;
-    updateChordDisplay();
-    clearHighlightedKeys();
-    selectedScale = null;
-    updateVoicingTypeMenuState();
-});
 
 trashCan.addEventListener('dragover', (e) => {
     e.preventDefault();
     trashCan.classList.add('drag-over');
 });
 
-trashCan.addEventListener('dragleave', () => {
+trashCan.addEventListener('dragleave', (e) => {
+    e.preventDefault();
     trashCan.classList.remove('drag-over');
 });
 
@@ -375,17 +370,24 @@ trashCan.addEventListener('drop', (e) => {
     e.preventDefault();
     trashCan.classList.remove('drag-over');
     const index = e.dataTransfer.getData('text/plain');
-    chordList.splice(index, 1);
-    updateChordDisplay();
-    playClearSound();
-    if (chordList.length > 0) {
-        const newIndex = Math.min(index, chordList.length - 1);
-        selectChord(chordList[newIndex], newIndex);
-    } else {
-        selectedScale = null;
-        clearHighlightedKeys();
-        updateVoicingTypeMenuState();
+    if (index !== '') {
+        playClearSound();
+        chordList.splice(parseInt(index), 1);
+        updateChordDisplay();
+        if (chordList.length > 0) {
+            const newIndex = Math.min(parseInt(index), chordList.length - 1);
+            selectChord(chordList[newIndex], newIndex);
+        } else {
+            selectedScale = null;
+            clearHighlightedKeys();
+            updateVoicingTypeMenuState();
+            updateSectionVisibility();
+        }
     }
+});
+
+document.addEventListener('dragend', () => {
+    trashCan.classList.remove('drag-over');
 });
 
 function clearHighlightedKeys() {
@@ -695,6 +697,16 @@ function updateVoicingTypeMenuState() {
     }
 }
 
+// Function to update visibility of sections based on scale selection
+function updateSectionVisibility() {
+    const voicingSection = document.getElementById('voicing-section');
+    const playButtons = document.getElementById('play-buttons');
+    const hasSelectedScale = selectedScale !== null;
+
+    voicingSection.classList.toggle('hidden', !hasSelectedScale);
+    playButtons.classList.toggle('hidden', !hasSelectedScale);
+}
+
 // Add event listeners for real-time scale updates
 document.getElementById('root-note').addEventListener('change', () => {
     selectScaleAudio.currentTime = 0;
@@ -736,6 +748,27 @@ adjustVoicingTypes();
 // Add event listeners for scale category and mode changes
 document.getElementById('scale-category').addEventListener('change', updateScaleModes);
 document.getElementById('scale-mode').addEventListener('change', adjustVoicingTypes);
+
+// Initialize sections as hidden
+document.addEventListener('DOMContentLoaded', () => {
+    updateSectionVisibility();
+    const chordDisplay = document.getElementById('chord-display');
+    
+    // Restore visibility state
+    if (localStorage.getItem('hasAddedScale')) {
+        chordDisplay.classList.add('has-scales');
+    }
+    
+    // Restore saved scales
+    const savedScales = localStorage.getItem('savedScales');
+    if (savedScales) {
+        chordList.push(...JSON.parse(savedScales));
+        updateChordDisplay();
+        if (chordList.length > 0) {
+            selectChord(chordList[0], 0);
+        }
+    }
+});
 
 // Add keyboard shortcuts
 (function addTooltips() {
