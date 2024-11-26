@@ -170,12 +170,14 @@ function playSampledNote(note, velocity = 127, isChord = false) {
 
 // Function to play note and add visual feedback
 function playNoteWithSynth(note, keyElement, velocity = 127, isChord = false) {
-    keyElement.classList.add('red-key'); // Add red-key class
     playSampledNote(note, velocity, isChord);
-
-    setTimeout(() => {
-        keyElement.classList.remove('red-key'); // Remove red-key class after a short duration
-    }, 200); // Duration can be adjusted as needed
+    if (keyElement) {
+        keyElement.classList.add('active');
+        // Remove active class after note duration
+        setTimeout(() => {
+            keyElement.classList.remove('active');
+        }, isChord ? 1000 : 500); // Longer duration for chords
+    }
 }
 
 // Initialize MIDI
@@ -260,6 +262,36 @@ function handleMIDIMessage(message) {
 window.addEventListener('load', () => {
     initMIDI();
     initAudioContext(); // Preload primary notes on page load
+
+    // Add event listeners to piano keys
+    const pianoKeys = document.querySelectorAll('.piano-key');
+    const pressedKeys = new Set();
+
+    // Remove any existing event listeners
+    pianoKeys.forEach(key => {
+        const newKey = key.cloneNode(true);
+        key.parentNode.replaceChild(newKey, key);
+    });
+
+    // Add new event listeners
+    document.querySelectorAll('.piano-key').forEach(key => {
+        key.addEventListener('mousedown', (e) => {
+            e.preventDefault(); // Prevent text selection
+            if (!pressedKeys.has(key)) {
+                const note = key.getAttribute('data-note');
+                pressedKeys.add(key);
+                playNoteWithSynth(note, key);
+            }
+        });
+
+        key.addEventListener('mouseup', () => {
+            pressedKeys.delete(key);
+        });
+
+        key.addEventListener('mouseleave', () => {
+            pressedKeys.delete(key);
+        });
+    });
 
     // Add hover tooltips for play buttons
     const playScaleButton = document.getElementById('play-scale');

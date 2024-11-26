@@ -17,32 +17,34 @@
     <main>
         <div class="MenuContainer">
             <section id="chord-input">
-                <select id="root-note">
-                    <option value="C">C</option>
-                    <option value="C#">C♯/D♭</option>
-                    <option value="D">D</option>
-                    <option value="D#">D♯/E♭</option>
-                    <option value="E">E</option>
-                    <option value="F">F</option>
-                    <option value="F#">F♯/G♭</option>
-                    <option value="G">G</option>
-                    <option value="G#">G♯/A♭</option>
-                    <option value="A">A</option>
-                    <option value="A#">A♯/B♭</option>
-                    <option value="B">B</option>
-                </select>
-                <select id="scale-category">
-                    <option value="major">Major</option>
-                    <option value="harmonic-minor">Harmonic Minor</option>
-                    <option value="melodic-minor">Melodic Minor</option>
-                    <option value="other">Other</option>
-                </select>
-                <select id="scale-mode">
-                    <!-- Options will be populated by JavaScript -->
-                </select>
-                <div>
-                    <button id="add-chord">+</button>
-                    <button id="random-chord">🎲</button>
+                <div class="input-row">
+                    <select id="root-note">
+                        <option value="C">C</option>
+                        <option value="C#">C♯/D♭</option>
+                        <option value="D">D</option>
+                        <option value="D#">D♯/E♭</option>
+                        <option value="E">E</option>
+                        <option value="F">F</option>
+                        <option value="F#">F♯/G♭</option>
+                        <option value="G">G</option>
+                        <option value="G#">G♯/A♭</option>
+                        <option value="A">A</option>
+                        <option value="A#">A♯/B♭</option>
+                        <option value="B">B</option>
+                    </select>
+                    <select id="scale-category">
+                        <option value="major">Major</option>
+                        <option value="harmonic-minor">Harmonic Minor</option>
+                        <option value="melodic-minor">Melodic Minor</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <select id="scale-mode">
+                        <!-- Options will be populated by JavaScript -->
+                    </select>
+                    <div class="button-container">
+                        <button id="add-chord">+</button>
+                        <button id="random-chord">🎲</button>
+                    </div>
                 </div>
             </section>
 

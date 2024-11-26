@@ -529,17 +529,21 @@ function playHighlightedNotes() {
     const bpm = 100;
     const interval = (60 / bpm) * 1000;
 
-    const clickKey = () => {
+    const playNote = () => {
         if (noteIndex < highlightedKeys.length) {
             const key = highlightedKeys[noteIndex];
-            key.click();
+            const note = key.getAttribute('data-note');
+            playNoteWithSynth(note, key);
             noteIndex++;
         } else {
             clearInterval(playInterval);
         }
     };
 
-    const playInterval = setInterval(clickKey, interval);
+    // Play first note immediately
+    playNote();
+    // Then start interval for remaining notes
+    const playInterval = setInterval(playNote, interval);
 }
 
 // Function to play 4-note chord

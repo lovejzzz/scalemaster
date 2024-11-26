@@ -34,53 +34,68 @@ header img {
     margin: 0 auto; /* Center the image */
 }
 
-/* Container for Keyboard and Play Buttons */
+/* Container for all sections */
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 /* Chord Input, Display, Play Buttons, and Voicing Section */
 #chord-input, #chord-display, #play-buttons, #voicing-section {
-    font-family: "IM Fell Great Primer", serif;
-    font-weight: 400;
-    font-style: normal;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto 20px auto;
     padding: 15px;
     background: linear-gradient(to bottom, #ffffff 0%, #eaeaea 100%);
     border-radius: 8px;
     box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1), 
                 0 4px 6px rgba(0, 0, 0, 0.1);
     border: 1px solid #ccc;
-    width: 100%;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
     box-sizing: border-box;
 }
 
 /* Chord Input specific styles */
 #chord-input {
     position: relative;
-    padding-bottom: 60px; /* Make space for the buttons */
+    padding: 15px;
 }
 
-/* 1. Adjust spacing between Add Chord and Random Chord buttons */
+/* Input row layout */
+.input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Make selects grow to fill space */
+.input-row select {
+    flex: 1;
+    min-width: 0; /* Allow select to shrink below min-content */
+}
+
+/* Button container in chord input */
+.button-container {
+    display: flex;
+    gap: 10px;
+    margin-left: 10px;
+}
+
+/* Add and Random Chord buttons */
 #add-chord, #random-chord {
-    position: absolute;
-    bottom: 15px;
-    height: 40px;
-    width: 10%;
-    transition: transform 0.2s ease, background 0.3s;
-}
-
-#add-chord {
-    right: 90px; /* Increased from 70px to add more space */
-}
-
-#random-chord {
-    right: 15px; /* Keeps the Random Chord button at the far right */
+    min-width: 44px;
+    height: 44px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0; /* Prevent buttons from shrinking */
 }
 
 /* Specific Styles for Voicing Controls */
@@ -139,6 +154,20 @@ select:focus {
     border-color: #999;
 }
 
+/* Play buttons container */
+#play-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+#play-buttons button {
+    flex: 1;
+    min-width: 120px;
+    max-width: 200px;
+}
+
 /* Button styles */
 button {
     padding: 10px 20px;
@@ -165,20 +194,6 @@ button:hover {
 
 button:active {
     transform: scale(0.95);
-}
-
-/* Play Buttons Container */
-#play-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 10px;
-    background: none;
-    border: none;
-    box-shadow: none;
-    margin-bottom: 0;
-    clear: both;
-    width: 100%;
 }
 
 /* Unordered List */
@@ -219,73 +234,135 @@ li:hover {
     transform: scale(1.05);
 }
 
+/* Piano Container */
+#piano {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
 /* Keyboard styles */
 .keyboard {
     position: relative;
     width: 100%;
+    padding-bottom: 30%; /* Maintain aspect ratio */
     max-width: 600px;
     margin: 0 auto;
-    height: auto;
 }
 
+/* Base key styles */
+.piano-key {
+    position: absolute;
+    border-radius: 0 0 5px 5px;
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+}
+
+/* Piano Key Active State */
+.piano-key.active {
+    background: linear-gradient(to bottom, #ff4444 0%, #cc0000 100%) !important;
+    border-color: #cc0000 !important;
+}
+
+/* Black Key Active State */
+.black-key.active {
+    background: linear-gradient(to bottom, #ff4444 0%, #cc0000 100%) !important;
+    border-color: #cc0000 !important;
+}
+
+/* White keys */
 .white-key {
-    width: 6.6667%;
-    aspect-ratio: 2 / 10;
     background: linear-gradient(to bottom, #ffffff 0%, #e6e6e6 100%);
     border: 1px solid #bbb;
-    float: left;
-    box-sizing: border-box;
-    position: relative;
-    transition: transform 0.1s ease-in-out;
+    width: 6.66%; /* 100% / 15 white keys */
+    height: 100%;
+    z-index: 1;
     box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.2), 0 2px 3px rgba(0, 0, 0, 0.2);
 }
 
+/* Black keys */
 .black-key {
-    width: 5%;
-    aspect-ratio: 1 / 4;
     background: linear-gradient(to bottom, #333333 0%, #000000 100%);
-    position: absolute;
-    top: 0;
-    z-index: 1;
-    transition: transform 0.1s ease-in-out;
+    width: 4%; /* Narrower than white keys */
+    height: 65%;
+    z-index: 2;
+    border: 1px solid #000;
     box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.2), 0 2px 3px rgba(0, 0, 0, 0.4);
-    border-radius: 2px;
+    border-radius: 0 0 2px 2px;
 }
 
-/* Positions for black keys */
-#key1 { left: 5%; }
-#key3 { left: 11.6667%; }
-#key6 { left: 25%; }
-#key8 { left: 31.6667%; }
-#key10 { left: 38.3333%; }
-#key13 { left: 51.6667%; }
-#key15 { left: 58.3333%; }
-#key18 { left: 71.6667%; }
-#key20 { left: 78.3333%; }
-#key22 { left: 85%; }
+/* Set positions for white keys */
+.white-key:nth-of-type(1) { left: 0; }
+.white-key:nth-of-type(2) { left: 6.66%; }
+.white-key:nth-of-type(3) { left: 13.32%; }
+.white-key:nth-of-type(4) { left: 19.98%; }
+.white-key:nth-of-type(5) { left: 26.64%; }
+.white-key:nth-of-type(6) { left: 33.3%; }
+.white-key:nth-of-type(7) { left: 39.96%; }
+.white-key:nth-of-type(8) { left: 46.62%; }
+.white-key:nth-of-type(9) { left: 53.28%; }
+.white-key:nth-of-type(10) { left: 59.94%; }
+.white-key:nth-of-type(11) { left: 66.6%; }
+.white-key:nth-of-type(12) { left: 73.26%; }
+.white-key:nth-of-type(13) { left: 79.92%; }
+.white-key:nth-of-type(14) { left: 86.58%; }
+.white-key:nth-of-type(15) { left: 93.24%; }
 
- /* Highlighted keys */
-.highlighted.white-key {
+/* Set positions for black keys */
+.black-key:nth-of-type(16) { left: 4.66%; }  /* After C */
+.black-key:nth-of-type(17) { left: 11.32%; } /* After D */
+.black-key:nth-of-type(18) { left: 24.64%; } /* After F */
+.black-key:nth-of-type(19) { left: 31.3%; }  /* After G */
+.black-key:nth-of-type(20) { left: 37.96%; } /* After A */
+.black-key:nth-of-type(21) { left: 51.28%; } /* After C */
+.black-key:nth-of-type(22) { left: 57.94%; } /* After D */
+.black-key:nth-of-type(23) { left: 71.26%; } /* After F */
+.black-key:nth-of-type(24) { left: 77.92%; } /* After G */
+.black-key:nth-of-type(25) { left: 84.58%; } /* After A */
+
+/* Key hover and active states */
+.white-key:hover {
+    background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+}
+
+.black-key:hover {
+    background: linear-gradient(to bottom, #444444 0%, #222222 100%);
+}
+
+.white-key:active, .white-key.active {
+    transform: scale(0.97);
+}
+
+.black-key:active, .black-key.active {
+    transform: scale(0.97);
+}
+
+/* Highlighted key styles */
+.white-key.highlighted {
     background: #ffd700;
     box-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
 }
 
-.highlighted.black-key {
+.black-key.highlighted {
     background: #ffa500;
     box-shadow: 0 0 10px rgba(255, 165, 0, 0.7);
 }
 
-.red-key {
-    
-    background-color: red !important;
+/* Mobile adjustments */
+@media screen and (max-width: 768px) {
+    .keyboard {
+        padding-bottom: 45%; /* Slightly taller on mobile for better touch */
+    }
 }
 
-.white-key, .black-key {
-    transition: transform 0.1s ease-in-out;
-}
-
-.white-key:active, .black-key:active {
-    transform: scale(0.97);
+@media screen and (max-width: 480px) {
+    .keyboard {
+        padding-bottom: 60%; /* Even taller on smaller screens */
+    }
 }
 
 /* Tooltip Container */
@@ -487,7 +564,7 @@ li:hover {
 }
 
 /* Responsive Adjustments */
-@media (max-width: 600px) {
+@media screen and (max-width: 600px) {
     #chord-input, #voicing-section, #chord-display {
         flex-direction: column;
         align-items: stretch;
@@ -515,6 +592,234 @@ li:hover {
 
     .tooltip-text {
         width: min(180px, 60vw); /* Wider on mobile but still responsive */
+    }
+}
+
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    header {
+        font-size: 1.5em;
+    }
+
+    /* Adjust container width for mobile */
+    .container {
+        padding: 0 10px;
+    }
+
+    #chord-input, #chord-display, #play-buttons, #voicing-section {
+        max-width: 100%;
+        padding: 10px;
+        margin-left: 0;
+        margin-right: 0;
+        box-sizing: border-box;
+    }
+
+    /* Stack voicing controls vertically */
+    #voicing-section {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    /* Make selects full width on mobile */
+    select {
+        width: 100%;
+        min-width: unset;
+        max-width: 100%;
+    }
+
+    /* Adjust button sizes */
+    #add-chord, #random-chord {
+        width: auto;
+        position: static;
+        margin: 5px;
+    }
+
+    /* Adjust chord input layout */
+    #chord-input {
+        padding-bottom: 10px;
+    }
+
+    /* Stack buttons in chord input */
+    #chord-input-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+
+    /* Adjust play buttons for mobile */
+    #play-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #play-buttons button {
+        width: 100%;
+    }
+
+    /* Make piano keys smaller on mobile */
+    .white-key {
+        width: 30px;
+        height: 120px;
+    }
+
+    .black-key {
+        width: 20px;
+        height: 80px;
+    }
+
+    /* Adjust list items for mobile */
+    li {
+        width: 100%;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+
+    /* Make tooltips more mobile-friendly */
+    .tooltip {
+        max-width: 200px;
+    }
+}
+
+/* iPhone SE and smaller devices */
+@media screen and (max-width: 375px) {
+    .white-key {
+        width: 25px;
+        height: 100px;
+    }
+
+    .black-key {
+        width: 15px;
+        height: 70px;
+    }
+
+    header {
+        font-size: 1.2em;
+    }
+}
+
+/* Update Mobile Styles */
+@media screen and (max-width: 768px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    #piano {
+        margin: 0 -10px; /* Negative margin to allow full width */
+        padding: 0 10px;
+        width: calc(100% + 20px); /* Compensate for negative margin */
+    }
+
+    .white-key {
+        width: 35px; /* Slightly larger for better touch */
+        height: 120px;
+        min-width: 35px; /* Prevent shrinking */
+    }
+
+    .black-key {
+        width: 20px;
+        height: 80px;
+        min-width: 20px; /* Prevent shrinking */
+    }
+
+    /* Improve button layout */
+    .button-container {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    #add-chord, #random-chord {
+        position: static;
+        width: auto;
+        flex: 0 1 auto;
+        margin: 5px;
+    }
+
+    /* Make containers responsive */
+    #chord-input, #chord-display, #play-buttons, #voicing-section {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+        box-sizing: border-box;
+    }
+}
+
+/* iPhone SE and smaller devices */
+@media screen and (max-width: 375px) {
+    .white-key {
+        width: 30px;
+        height: 100px;
+        min-width: 30px;
+    }
+
+    .black-key {
+        width: 18px;
+        height: 70px;
+        min-width: 18px;
+    }
+
+    .container {
+        padding: 0 5px;
+    }
+}
+
+/* Button container adjustments */
+@media screen and (max-width: 768px) {
+    .button-container {
+        justify-content: center;
+        margin-top: 15px;
+    }
+
+    /* Play buttons on mobile */
+    #play-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    #play-buttons button {
+        width: 100%;
+        max-width: none;
+    }
+
+    /* Add and Random buttons */
+    #add-chord, #random-chord {
+        min-width: 50px;
+        height: 50px;
+    }
+}
+
+/* Extra small devices */
+@media screen and (max-width: 480px) {
+    /* Adjust button sizes for better touch */
+    #add-chord, #random-chord {
+        min-width: 44px;
+        height: 44px;
+        font-size: 1.2em;
+    }
+
+    /* Ensure buttons are touch-friendly */
+    button {
+        min-height: 44px;
+    }
+}
+
+/* Responsive adjustments for input row */
+@media screen and (max-width: 600px) {
+    .input-row {
+        flex-wrap: wrap;
+    }
+    
+    .input-row select {
+        flex: 1 1 auto;
+    }
+    
+    .button-container {
+        margin-left: auto;
     }
 }
 
