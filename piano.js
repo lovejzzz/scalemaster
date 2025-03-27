@@ -7,6 +7,7 @@ let sampleBuffers = new Map();
 // MIDI Setup
 let midiAccess = null;
 let midiInput = null;
+let midiEnabled = true; // Flag to control MIDI functionality
 
 // Master gain node for overall volume control
 let masterGainNode = null;
@@ -196,7 +197,7 @@ async function initMIDI() {
             updateMIDIStatus(`Connected to ${midiInput.name}`);
         } else {
             console.log('No MIDI input devices available');
-            updateMIDIStatus('MIDI device is supported');
+            updateMIDIStatus('device is supported');
         }
 
         // Listen for device connections/disconnections
@@ -209,7 +210,7 @@ async function initMIDI() {
                     updateMIDIStatus(`Connected to ${midiInput.name}`);
                 } else if (e.port.state === 'disconnected' && midiInput === e.port) {
                     midiInput = null;
-                    updateMIDIStatus('MIDI device disconnected');
+                    updateMIDIStatus('device disconnected');
                 }
             }
         };
@@ -222,9 +223,17 @@ async function initMIDI() {
 // Update MIDI status display
 function updateMIDIStatus(message) {
     const statusElement = document.getElementById('midi-status');
-    if (statusElement) {
-        statusElement.textContent = message;
+    const statusTextElement = document.getElementById('midi-status-text');
+    const toggleElement = document.getElementById('midi-toggle');
+    
+    if (statusElement && statusTextElement) {
+        statusTextElement.textContent = message;
         statusElement.className = message.includes('Connected') ? 'connected' : '';
+        
+        // Update toggle button appearance based on midiEnabled state
+        if (toggleElement) {
+            toggleElement.className = midiEnabled ? 'midi-on' : 'midi-off';
+        }
     }
 }
 
@@ -238,6 +247,9 @@ function midiNoteToName(midiNote) {
 
 // Handle MIDI messages
 function handleMIDIMessage(message) {
+    // Skip processing if MIDI is disabled
+    if (!midiEnabled) return;
+    
     const command = message.data[0];
     const midiNote = message.data[1];
     const velocity = message.data[2];
@@ -258,8 +270,35 @@ function handleMIDIMessage(message) {
     }
 }
 
+// Toggle MIDI functionality
+function toggleMIDI() {
+    midiEnabled = !midiEnabled;
+    const toggleElement = document.getElementById('midi-toggle');
+    
+    if (toggleElement) {
+        toggleElement.className = midiEnabled ? 'midi-on' : 'midi-off';
+    }
+    
+    // If MIDI was turned back on and we have a connection, update the status message
+    if (midiEnabled && midiInput) {
+        updateMIDIStatus(`Connected to ${midiInput.name}`);
+    } else if (!midiEnabled) {
+        // If MIDI was turned off, update the status message
+        updateMIDIStatus('disabled');
+    } else {
+        // If MIDI was turned on but we don't have a connection yet
+        updateMIDIStatus('device is supported');
+    }
+}
+
 // Initialize audio and MIDI when the page loads
 window.addEventListener('load', () => {
+    // Add event listener for MIDI toggle
+    const toggleElement = document.getElementById('midi-toggle');
+    if (toggleElement) {
+        toggleElement.addEventListener('click', toggleMIDI);
+    }
+    
     initMIDI();
     initAudioContext(); // Preload primary notes on page load
 

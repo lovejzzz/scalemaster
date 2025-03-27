@@ -700,6 +700,22 @@ body.has-scales #midi-status {
     color: white;
 }
 
+/* MIDI Toggle Button Styles */
+#midi-toggle {
+    cursor: pointer;
+    font-weight: bold;
+    user-select: none;
+    transition: color 0.2s ease;
+}
+
+#midi-toggle.midi-on {
+    color: black;
+}
+
+#midi-toggle.midi-off {
+    color: gray;
+}
+
 /* Trash Can Icon */
 .trash-can {
     position: relative;

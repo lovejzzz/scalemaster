@@ -43,3 +43,7 @@ A jazz scale look-up website.
 1.79 version: Font of the website is all set to "IM Fell Great Primer".
 
 1.795 version: Fix bugs.
+
+1.8 version: Added MIDI toggle functionality - clickable MIDI text that shows black when enabled and grey when disabled. This allows users to easily turn MIDI input on or off.
+
+1.81 version: Fixed scale modes dropdown initialization issue. The dropdown now correctly populates on page load with the appropriate options for the selected scale category.

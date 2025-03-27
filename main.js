@@ -140,17 +140,25 @@ keys.forEach(key => {
 // Function to update the scale modes based on the selected scale category
 function updateScaleModes() {
     console.log('Updating scale modes...');
-    const scaleCategory = document.getElementById('scale-category').value;
+    const scaleCategory = document.getElementById('scale-category');
     const scaleModeSelect = document.getElementById('scale-mode');
-    console.log('Scale category:', scaleCategory);
+    
+    if (!scaleCategory || !scaleModeSelect) {
+        console.error('Scale category or scale mode select not found in DOM');
+        return;
+    }
+    
+    // Get the value, defaulting to 'major' if none is selected
+    const categoryValue = scaleCategory.value || 'major';
+    console.log('Scale category:', categoryValue);
     
     // Clear existing options
     scaleModeSelect.innerHTML = '';
     scaleModeSelect.disabled = true;
 
-    if (scaleCategory in scaleModes) {
+    if (categoryValue in scaleModes) {
         // Add the modes for the selected category
-        scaleModes[scaleCategory].forEach(mode => {
+        scaleModes[categoryValue].forEach(mode => {
             const option = document.createElement('option');
             option.value = mode.value;
             option.textContent = mode.name;
@@ -163,6 +171,16 @@ function updateScaleModes() {
             // Trigger change event to update the keyboard
             scaleModeSelect.dispatchEvent(new Event('change'));
         }
+    } else {
+        console.error('Scale category value not found in scaleModes:', categoryValue);
+        // Fallback to major if the category is not recognized
+        scaleModes['major'].forEach(mode => {
+            const option = document.createElement('option');
+            option.value = mode.value;
+            option.textContent = mode.name;
+            scaleModeSelect.appendChild(option);
+        });
+        scaleModeSelect.disabled = false;
     }
     
     console.log('Scale modes updated. Number of options:', scaleModeSelect.options.length);
@@ -731,6 +749,36 @@ function playClearSound() {
 // Initialize audio on first user interaction
 document.addEventListener('click', initializeAudioContext, { once: true });
 document.addEventListener('keydown', initializeAudioContext, { once: true });
+
+// Initialize scale modes dropdown when the page loads
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded - Initializing Scale Modes');
+    
+    // First verify scale-category has a value, if not select the first option
+    const scaleCategorySelect = document.getElementById('scale-category');
+    console.log('Scale Category Select found:', !!scaleCategorySelect, 'with value:', scaleCategorySelect ? scaleCategorySelect.value : 'not found');
+    
+    if (scaleCategorySelect && !scaleCategorySelect.value) {
+        // Use the first option's value if available
+        if (scaleCategorySelect.options.length > 0) {
+            console.log('Setting initial scale category value to:', scaleCategorySelect.options[0].value);
+            scaleCategorySelect.value = scaleCategorySelect.options[0].value;
+        }
+    }
+    
+    // Now populate the scale modes dropdown
+    console.log('Calling updateScaleModes()');
+    updateScaleModes();
+    
+    // Make sure the scale-mode isn't left disabled
+    const scaleModeSelect = document.getElementById('scale-mode');
+    console.log('Scale Mode Select found:', !!scaleModeSelect, 'options:', scaleModeSelect ? scaleModeSelect.options.length : 0, 'disabled:', scaleModeSelect ? scaleModeSelect.disabled : 'N/A');
+    
+    if (scaleModeSelect && scaleModeSelect.disabled && scaleModeSelect.options.length > 0) {
+        console.log('Enabling previously disabled scale mode select');
+        scaleModeSelect.disabled = false;
+    }
+});
 
 // Add keyboard shortcuts
 (function addTooltips() {
